@@ -1,4 +1,4 @@
-package Laboratori.Lab1.Segno;
+
 public class Segno {
 
     public static void main(String[] args) {
