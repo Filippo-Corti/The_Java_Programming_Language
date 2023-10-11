@@ -6,6 +6,8 @@ public class Sottostringa {
         } else {
             System.out.println(args[1] + " non è sottostringa di " + args[0]);
         }
+        //System.out.println(sottoStringa(null, null));
+        //System.out.println(sottoStringaTotale(null, null));
     }
 
     // Procedura parziale
@@ -21,14 +23,14 @@ public class Sottostringa {
     }
 
     // Procedura totale
-    // REQUIRES: testo, parola not null
     // MODIFIES: /
     // EFFECTS: return true if parola is substring of testo,
-    // false otherwise
+    // false otherwise (even if testo or parola are null)
     public static boolean sottoStringaTotale(String testo, String parola) {
-       // if (testo == null || parola == null) 
-         //   return null;
-        
+         if (testo == null || parola == null) 
+           return false;
+        testo = testo.toLowerCase();
+        parola = parola.toLowerCase();
         return testo.contains(parola);
     }
 
