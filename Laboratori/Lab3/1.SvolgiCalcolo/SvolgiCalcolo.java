@@ -4,6 +4,11 @@ import java.util.Scanner;
 public class SvolgiCalcolo {
     // OVERVIEW: classe statica che testa CalcolatriceConMemoria
 
+    public static void stampaRegoleInserimento() {
+System.out.println("Inserisci <operatore> <operando>. es: + 3");
+        System.out.println("Per terminare inserire il carattere '='.");
+    }
+
     public static void main(String[] args) {
         CalcolatriceConMemoria calcolatriceConMemoria = new CalcolatriceConMemoria();
 
@@ -19,8 +24,7 @@ public class SvolgiCalcolo {
         Scanner s = new Scanner(System.in);
 
         System.out.println("Calcolatrice inizializzata, valore: " + calcolatriceConMemoria.getMem());
-        System.out.println("Inserisci <operatore> <operando>. es: + 3");
-        System.out.println("Per terminare inserire il carattere '='.");
+        stampaRegoleInserimento();
         while (true) {
             String in = s.nextLine();
 
@@ -32,12 +36,10 @@ public class SvolgiCalcolo {
                 calcolatriceConMemoria.operate(splitIn[0].charAt(0), Double.parseDouble(splitIn[1]));
             } catch (DivideByZeroException e) {
                 System.out.println(e.getMessage());
-                System.out.println("Inserisci <operatore> <operando>. es: + 3");
-                System.out.println("Per terminare inserire il carattere '='.");
+                stampaRegoleInserimento();
             } catch (InputMismatchException e) {
                 System.out.println(e.getMessage());
-                System.out.println("Inserisci <operatore> <operando>. es: + 3");
-                System.out.println("Per terminare inserire il carattere '='.");
+               stampaRegoleInserimento();
             } catch (NumberFormatException | NullPointerException e) {
                 System.out.println("Input non valido: " + e.getMessage());
             }
