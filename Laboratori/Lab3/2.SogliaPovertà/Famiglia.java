@@ -9,7 +9,9 @@ public class Famiglia {
     double reddito;
 
     // constructors
-    public Famiglia(int dimensione, double reddito) {
+    public Famiglia(int dimensione, double reddito) throws InputMismatchException {
+        if (dimensione <= 0)
+            throw new InputMismatchException("Impossibile creare famiglia con meno di 1 componente");
         this.dimensione = dimensione;
         this.reddito = reddito;
     }
@@ -53,7 +55,11 @@ public class Famiglia {
         while (s.hasNext()) {
             double red = s.nextDouble();
             int dim = s.nextInt();
-            famiglie.add(new Famiglia(dim, red));
+            try {
+                famiglie.add(new Famiglia(dim, red));
+            } catch (InputMismatchException e) {
+                System.out.println(e.getMessage());
+            }
             System.out
                     .println("Inserisci il reddito e la dimensione di una famiglia (Ctrl+D per terminare la lettura)");
         }
@@ -61,11 +67,14 @@ public class Famiglia {
         System.out.println();
 
         int i = 1;
-        for (Famiglia f : famiglie) {
-            if (f.sottoSogliaPoverta(costoAlloggio, costoVitto))
-                System.out.println("Famiglia " + i + ": " + f);
-            i++;
-
+        try {
+            for (Famiglia f : famiglie) {
+                if (f.sottoSogliaPoverta(costoAlloggio, costoVitto))
+                    System.out.println("Famiglia " + i + ": " + f);
+                i++;
+            }
+        } catch (InputMismatchException e) {
+            System.out.println(e.getMessage());
         }
 
     }
