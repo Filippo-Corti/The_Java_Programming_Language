@@ -3,11 +3,11 @@ import java.util.Scanner;
 public class Auto {
     // OVERIVEW: classe mutabile che descrive un'automobile
 
-    int capacitaSerbatoio;
+    final int capacitaSerbatoio;
     double litriInSerbatoio;
-    int velocitaMassima;
+    final int velocitaMassima;
     int velocitaCorrente;
-    double consumoMedio; // km/litro
+    final double consumoMedio; // km/litro
 
     // constructors
     public Auto(int capacitaSerbatoio, int velocitaMassima, double consumoMedio) throws IllegalArgumentException {
