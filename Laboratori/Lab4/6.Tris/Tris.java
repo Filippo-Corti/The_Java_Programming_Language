@@ -15,6 +15,7 @@ public class Tris {
 
     // constructors
     public Tris() {
+        // MODIFIES: this
         // EFFECTS: inizializza Tris ad un tabellone vuoto, con turno del giocatore 'O';
         tabellone = new char[3][3];
         turno = CERCHIO;
@@ -23,12 +24,21 @@ public class Tris {
     }
 
     public boolean repOk() {
-        if (contaMosse > 9)
+        if (contaMosse > 9 || contaMosse < 0)
             return false;
         if (turno != CERCHIO && turno != ICS)
             return false;
         if (tabellone == null)
             return false;
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (tabellone[i][j] != VUOTO && tabellone[i][j] != CERCHIO && tabellone[i][j] != ICS) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
@@ -49,9 +59,9 @@ public class Tris {
     }
 
     public void mossa(int x, int y) throws IllegalArgumentException {
-        // MODIFIES: this.tabellone, this.turno, this.mosse
+        // MODIFIES: this.tabellone, this.mosse
         // EFFECTS: inserisce turno in tabellone[x-1][y-1]. Poi incrementa il contatore
-        // di mosse di 1 e cambio turno
+        // di mosse di 1 
         // se la casella è occupata lancia IllegalArgumentException
         // se x e y non sono compresi tra 1 e 3 lancia IllegalArgumentException
 
@@ -75,7 +85,10 @@ public class Tris {
         for (int i = 0; i < 3; i++) {
             res += "| " + (i + 1) + " |";
             for (int j = 0; j < 3; j++) {
-                res += " " + tabellone[i][j] + " |";
+                if (tabellone[i][j] == VUOTO)
+                    res += "   |";
+                else
+                    res += " " + tabellone[i][j] + " |";
             }
             res += "\n-----------------\n";
         }
@@ -84,7 +97,7 @@ public class Tris {
 
     public boolean terminato() {
         // EFFECTS: ritorna true se sono già state effettuate 9 mosse;
-        return (this.contaMosse == 9);
+        return (this.contaMosse >= 9);
     }
 
     public boolean vittoria() {
@@ -108,24 +121,42 @@ public class Tris {
     }
 
     private boolean quadrEqual(char a, char b, char c, char d) {
+        // EFFECTS: returns a == b == c == d
         return (a == b && b == c && c == d);
     }
 
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
-        Tris tris = new Tris();
-        System.out.println(tris);
-        while (!tris.terminato()) {
-            System.out.println("Mossa di " + tris.turno());
-            System.out.println("Inserisci: x y");
-            tris.mossa(s.nextInt(), s.nextInt());
+        Tris tris;
+        boolean giocaAncora = true;
+        while (giocaAncora) {
+            tris = new Tris();
             System.out.println(tris);
-            if (tris.vittoria()) {
-                System.out.println("Ha vinto " + tris.turno());
-                System.exit(0);
+
+            while (!tris.terminato()) {
+                System.out.println("Mossa di " + tris.turno());
+                System.out.println("Inserisci: x y");
+                try {
+                    tris.mossa(s.nextInt(), s.nextInt());
+                    System.out.println(tris);
+                    if (tris.vittoria()) {
+                        System.out.println("Ha vinto " + tris.turno());
+                        break;
+                    }
+                    tris.cambiaTurno();
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Mossa non eseguita: " + e.getMessage());
+                    System.out.println(tris);
+                }
             }
-            tris.cambiaTurno();
+
+            if (tris.terminato())
+                System.out.println("Partita conclusa in pareggio");
+
+            System.out.println("Un'altra partita? (S/s per si)");
+            String in = s.next();
+            if (!in.equals("S") && !in.equals("s"))
+                giocaAncora = false;
         }
-        System.out.println("Tabellone riempito");
     }
 }
