@@ -3,6 +3,7 @@ import java.util.InputMismatchException;
 public class Razionale {
     // OVERVIEW: classe mutabile che rappresenta un numero razionale (una frazione)
 
+    //attributes
     int num;
     int den;
 
@@ -51,7 +52,7 @@ public class Razionale {
     }
 
     public double valore() {
-        // EFFECTS: ritorna num/den
+        // EFFECTS: ritorna num/den espresso in double
         return (double) num / den;
     }
 
