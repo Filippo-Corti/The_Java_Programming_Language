@@ -3,7 +3,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Percorso {
-    // OVERVIEW: classe mutabile che descrive una sequenza di punti Punto
+    // OVERVIEW: classe mutabile che descrive una sequenza di punti Punto, astrazioni immutabili
 
     // attributes
     ArrayList<Punto> punti;
