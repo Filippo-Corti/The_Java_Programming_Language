@@ -53,7 +53,7 @@ public class Evento implements Cloneable {
         return true;
     }
 
-    public Evento copiaEvento(int n) throws CloneNotSupportedException {
+    public Evento copiaEvento(int n){
         // EFFECTS: crea un nuovo evento con this.nome e this.data + n
         // se n <= 0 lancia IllegalArgumentException
         if (n <= 0)
