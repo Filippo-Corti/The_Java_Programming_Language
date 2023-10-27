@@ -38,7 +38,7 @@ public class Sheep implements Cloneable {
 
     public void sostituisciCromosoma(int i, String c) throws IndexOutOfBoundsException {
         // MODIFIES: this
-        // EFFECTS: modifica l'i-esimo  cromosoma di this a c
+        // EFFECTS: modifica l'i-esimo cromosoma di this a c
         // lancia IndexOutOfBoundsException se cromosomi.size() <= i || i < 0;
         this.cromosomi.set(i, c);
     }
@@ -48,9 +48,17 @@ public class Sheep implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        // TODO Auto-generated method stub
-        return super.clone();
+    protected Object clone() {
+        Sheep s = null;
+        try {
+            s = (Sheep) super.clone();
+        } catch (CloneNotSupportedException e) {
+            s = new Sheep(this.nome);
+        }
+
+        s.cromosomi = (ArrayList<String>) this.cromosomi.clone();
+
+        return s;
     }
 
     @Override
@@ -94,17 +102,6 @@ public class Sheep implements Cloneable {
             System.out.println("Le due pecore sono diverse.");
     }
 
-    public static Sheep clonaSheep(Sheep s) {
-        Sheep s2 = null;
-        try {
-            s2 = (Sheep) s.clone();
-        } catch (CloneNotSupportedException e) {
-            gestisciFatalException(e);
-        }
-        System.out.println("Ho creato un clone di " + s.getNome());
-        return s2;
-    }
-
     public static void main(String[] args) {
         if (args.length < 1) {
             System.out.println("Inserire un parametro da riga di comando");
@@ -128,9 +125,10 @@ public class Sheep implements Cloneable {
             }
         }
 
-        Sheep sheep2 = clonaSheep(sheep1);
+        Sheep sheep2= (Sheep) sheep1.clone();
+        System.out.println("Ho creato un clone di " + sheep1.getNome());
 
-        controllaUguaglianzaSheepEStampa(sheep1, sheep1);
+        controllaUguaglianzaSheepEStampa(sheep1, sheep2);
 
         Scanner s2 = new Scanner(System.in);
 
@@ -141,7 +139,10 @@ public class Sheep implements Cloneable {
             gestisciFatalException(e);
         }
 
-        controllaUguaglianzaSheepEStampa(sheep1, sheep1);
+        System.out.println(sheep1.getCromosoma(2));
+        System.out.println(sheep2.getCromosoma(2));
+
+        controllaUguaglianzaSheepEStampa(sheep1, sheep2);
     }
 
 }
