@@ -71,7 +71,7 @@ public class Evento implements Cloneable {
     public Object clone() {
         Evento nuovo = null;
         try {
-         nuovo = (Evento) super.clone();
+            nuovo = (Evento) super.clone();
         } catch (CloneNotSupportedException e) {
             nuovo = new Evento(data, nome);
         }
