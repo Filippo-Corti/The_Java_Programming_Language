@@ -5,12 +5,12 @@ import java.util.Iterator;
 
 public class Studente implements Iterable<Esame> {
     // OVERVIEW: classe mutabile che descrive uno studente con i suoi esami
-    //   + un'altra ArrayList a caso 
+    // + un'altra ArrayList a caso
 
     // attributes
     String nome;
     ArrayList<Esame> esami;
-    ArrayList<Integer> altroIterabile; 
+    ArrayList<Integer> altroIterabile;
 
     // constructors
     public Studente(String nome) throws IllegalArgumentException {
@@ -27,7 +27,7 @@ public class Studente implements Iterable<Esame> {
     public boolean repOk() {
         if (nome == null || nome.equals(""))
             return false;
-        //...
+        // ...
 
         return true;
     }
@@ -58,7 +58,8 @@ public class Studente implements Iterable<Esame> {
 
     @Override
     public Iterator<Esame> iterator() {
-        //EFFECTS: restituisce un iteratore che produce gli esami superati dallo studente
+        // EFFECTS: restituisce un iteratore che produce gli esami superati dallo
+        // studente
         // REQUIRES : this non deve essere modificato mentre l’iteratore e’ in uso
         return esami.iterator();
     }
@@ -80,11 +81,10 @@ public class Studente implements Iterable<Esame> {
 
         /* ITERAZIONE SU ITERATOR PRINCIPALE */
 
-        for (Esame esame : s) { //Iterazione direttamente sullo studente per i suoi esami (Incredibile)
+        for (Esame esame : s) { // Iterazione direttamente sullo studente per i suoi esami (Incredibile)
             System.out.println(esame);
         }
 
-        
         /* ITERAZIONE SU ALTRO ITERATOR */
 
         Iterator<Integer> i = s.altroIterator();
@@ -92,8 +92,7 @@ public class Studente implements Iterable<Esame> {
         while (i.hasNext()) {
             System.out.println(i.next());
         }
-
-        
+        i.remove(); // ATTENZIONE A QUESTO: questa operazione espone la mia rappresentazione (ho appena cancellato l'ultimo elemento dall'esterno)
 
     }
 
