@@ -55,6 +55,9 @@ public class OuterClass implements Iterable<Integer> {
         i.next();
         i.remove(); // Questo genera UnsupportedOperationException
                     // (Ho protetto la rappresentazione)
+
+        // Essendo Static posso volendo fare un nuovo oggetto StaticNestedClass:
+        StaticNestedClass snc = new StaticNestedClass(o);
     }
 
 }
