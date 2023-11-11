@@ -1,3 +1,5 @@
+import ClassiAstratte.Triangolo;
+
 public class Triangolo {
 
     private int base;
