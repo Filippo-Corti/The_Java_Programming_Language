@@ -19,6 +19,8 @@ public class Matrice implements Iterable<Iterator<Integer>> {
         if (n <= 0 || m <= 0)
             throw new IllegalArgumentException("Valori per righe/colonne matrice non validi");
         matrix = new int[n][m];
+
+        assert repOk();
     }
 
     // methods
@@ -27,6 +29,8 @@ public class Matrice implements Iterable<Iterator<Integer>> {
         // EFFECTS: matrice[r][c] = value
         // lancia IndexOutOfBoundException se r e c non sono nel range della matrice
         matrix[r][c] = value;
+
+        assert repOk();
     }
 
     public int get(int r, int c) throws IndexOutOfBoundsException {
@@ -46,6 +50,8 @@ public class Matrice implements Iterable<Iterator<Integer>> {
     }
 
     public boolean repOk() {
+        if (matrix == null)
+            return false;
         return true;
     }
 
