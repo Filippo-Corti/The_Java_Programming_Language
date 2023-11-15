@@ -26,15 +26,12 @@ public class Segmento2D implements Segmento {
         this.b = b;
     }
 
-    public Segmento2D(Punto3D a2, Punto3D b2) {
-    }
-
     // methods
-    public Punto3D getA() {
+    public Punto2D getA() {
         return a;
     }
 
-    public Punto3D getB() {
+    public Punto2D getB() {
         return b;
     }
 
@@ -50,26 +47,5 @@ public class Segmento2D implements Segmento {
 
     // Essendo immutabile, la repOk non è fondamentale
     // (a patto che i controlli nel costruttore siano tutti)
-
-    public static void main(String[] args) {
-        double maxLen = Double.parseDouble(args[0]);
-
-        ArrayList<Segmento2D> segmenti = new ArrayList<>();
-        Scanner s = new Scanner(System.in);
-        System.out.println("Inserisci i segmenti nelformato ax ay bx by (termina con CTRL+D)");
-
-        while (s.hasNext()) {
-            segmenti.add(
-                    new Segmento2D(
-                            new Punto2D(s.nextDouble(), s.nextDouble()),
-                            new Punto2D(s.nextDouble(), s.nextDouble())));
-        }
-
-        System.out.println("Segmenti di lunghezza superiore a " + maxLen);
-        for (Segmento2D segmento : segmenti) {
-            if (segmento.length() > maxLen)
-                System.out.println(segmento + " - Lunghezza: " + segmento.length());
-        }
-    }
 
 }

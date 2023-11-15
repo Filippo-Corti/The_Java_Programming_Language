@@ -29,7 +29,7 @@ public class Punto3D implements Punto {
 
     @Override
     public String toString() {
-        return super.toString() + ", z: " + z;
+        return p.toString() + ", z: " + z;
     }
 
     @Override
