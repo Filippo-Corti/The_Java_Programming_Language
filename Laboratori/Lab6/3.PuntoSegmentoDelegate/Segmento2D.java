@@ -26,12 +26,15 @@ public class Segmento2D implements Segmento {
         this.b = b;
     }
 
+    public Segmento2D(Punto3D a2, Punto3D b2) {
+    }
+
     // methods
-    public Punto2D getA() {
+    public Punto3D getA() {
         return a;
     }
 
-    public Punto2D getB() {
+    public Punto3D getB() {
         return b;
     }
 
