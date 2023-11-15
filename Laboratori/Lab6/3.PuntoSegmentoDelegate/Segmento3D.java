@@ -1,14 +1,13 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Segmento2D {
-    // OVERVIEW: modella un segmento 2D. Immutabile
+public class Segmento3D implements Segmento {
+    // OVERVIEW: modella un segmento 3D, ottenuto estendendo Segmento2D
 
-    // attributes
-    private final Punto2D a, b; // Qua public non andrebbe bene (sono oggetti)
+    private final Punto3D a, b;
 
-    // constructors
-    public Segmento2D(Punto2D a, Punto2D b) throws IllegalArgumentException, NullPointerException {
+    // constructor
+    public Segmento3D(Punto3D a, Punto3D b) throws IllegalArgumentException, NullPointerException {
         // MODIFIES: this
         // EFFECTS: inizilizza this con p1 e p2
         // lancia NullPointerException se p1 o p2 sono nulli
@@ -27,17 +26,20 @@ public class Segmento2D {
     }
 
     // methods
-    public Punto2D getA() {
+    public Punto3D getA() {
         return a;
     }
 
-    public Punto2D getB() {
+    public Punto3D getB() {
         return b;
     }
 
     public double length() {
         // EFFECTS: ritorna la lunghezza di this
-        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+        return Math.sqrt(
+                Math.pow(a.p.x - b.p.x, 2) +
+                        Math.pow(a.p.y - b.p.y, 2) +
+                        Math.pow(a.z - b.z, 2));
     }
 
     @Override
@@ -45,29 +47,24 @@ public class Segmento2D {
         return "Segmento - a: " + a.toString() + ", b: " + b.toString();
     }
 
-    // Essendo immutabile, la repOk non è fondamentale
-    // (a patto che i controlli nel costruttore siano tutti)
-
     public static void main(String[] args) {
         double maxLen = Double.parseDouble(args[0]);
 
-        ArrayList<Segmento2D> segmenti = new ArrayList<>();
+        ArrayList<Segmento3D> segmenti = new ArrayList<>();
         Scanner s = new Scanner(System.in);
-        System.out.println("Inserisci i segmenti nelformato ax ay bx by (termina con CTRL+D)");
+        System.out.println("Inserisci i segmenti nelformato ax ay az bx by bz (termina con CTRL+D)");
 
         while (s.hasNext()) {
             segmenti.add(
-                new Segmento2D(
-                    new Punto2D(s.nextDouble(), s.nextDouble()),
-                    new Punto2D(s.nextDouble(), s.nextDouble())
-                ));
+                    new Segmento3D(
+                            new Punto3D(s.nextDouble(), s.nextDouble(), s.nextDouble()),
+                            new Punto3D(s.nextDouble(), s.nextDouble(), s.nextDouble())));
         }
 
         System.out.println("Segmenti di lunghezza superiore a " + maxLen);
-        for (Segmento2D segmento : segmenti) {
+        for (Segmento3D segmento : segmenti) {
             if (segmento.length() > maxLen)
                 System.out.println(segmento + " - Lunghezza: " + segmento.length());
         }
     }
-
 }

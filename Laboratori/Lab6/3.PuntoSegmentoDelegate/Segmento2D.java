@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Segmento2D {
+public class Segmento2D implements Segmento {
     // OVERVIEW: modella un segmento 2D. Immutabile
 
     // attributes
@@ -57,10 +57,9 @@ public class Segmento2D {
 
         while (s.hasNext()) {
             segmenti.add(
-                new Segmento2D(
-                    new Punto2D(s.nextDouble(), s.nextDouble()),
-                    new Punto2D(s.nextDouble(), s.nextDouble())
-                ));
+                    new Segmento2D(
+                            new Punto2D(s.nextDouble(), s.nextDouble()),
+                            new Punto2D(s.nextDouble(), s.nextDouble())));
         }
 
         System.out.println("Segmenti di lunghezza superiore a " + maxLen);

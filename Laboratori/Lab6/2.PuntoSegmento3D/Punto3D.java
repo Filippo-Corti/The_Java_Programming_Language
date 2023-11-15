@@ -20,6 +20,7 @@ public class Punto3D extends Punto2D {
 
     @Override
     public boolean equals(Object obj) {
+        //Questa equals ha il problema di non rispettare il principio di Liskov per la transitività dell'equals
         if (this == obj)
             return true;
         if (obj == null)
@@ -35,6 +36,7 @@ public class Punto3D extends Punto2D {
         }
         return super.equals(obj); 
     }
+
 
 
 }
