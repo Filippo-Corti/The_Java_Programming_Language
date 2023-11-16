@@ -33,7 +33,7 @@ public class ProdottoAlimentare extends Prodotto {
     public double sconto() {
         // EFFECTS: ritorna super.sconto() oppure il prezzo scontato di
         // PERCENTUALE_SCONTO_STRAORDINARIA%, se la scadenza è a meno di 10 giorni
-        if (dataScadenza.until(LocalDate.now(), ChronoUnit.DAYS) < 10)
+        if (LocalDate.now().until(dataScadenza, ChronoUnit.DAYS) < 10)
             return super.sconto(PERCENTUALE_SCONTO_STRAORDINARIA);
         else
             return super.sconto();
@@ -43,7 +43,7 @@ public class ProdottoAlimentare extends Prodotto {
     public double getPercentualeSconto() {
         // EFFECTS: ritorna super.getPercentualeSconto() oppure
         // PERCENTUALE_SCONTO_STRAORDINARIA%, se la scadenza è a meno di 10 giorni
-        if (dataScadenza.until(LocalDate.now(), ChronoUnit.DAYS) < 10)
+        if (LocalDate.now().until(dataScadenza, ChronoUnit.DAYS) < 10)
             return PERCENTUALE_SCONTO_STRAORDINARIA;
         else
             return super.getPercentualeSconto();
