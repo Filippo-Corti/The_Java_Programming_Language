@@ -2,6 +2,10 @@ public class ScontoCombinato extends PoliticaSconto {
     //OVERVIEW: Politica di Sconto Combinata da due PoliticaSconto. Estende PoliticaSconto
     //  le due PoliticaSconto devono avere gli stessi parametri di ScontoCombinato ????
 
+    //NOTA: da sistemare facendo in modo che PoliticaSconto sia un'interfaccia con solo il metodo
+    //  La classe astratta diventa PoliticaSemplice, che implementa PoliticaSconto
+    //  ScontoCombinato implementa PoliticaSconto e contiene due PoliticaSemplice
+
     //attributes
     private PoliticaSconto politica1;
     private PoliticaSconto politica2;
