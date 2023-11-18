@@ -16,21 +16,21 @@ public class Punto2 {
     }
 
     //Primo equals: getClass()
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Punto2 other = (Punto2) obj;
-        if (x != other.x)
-            return false;
-        if (y != other.y)
-            return false;
-        return true;
-    }
+    // @Override
+    // public boolean equals(Object obj) {
+    //     if (this == obj)
+    //         return true;
+    //     if (obj == null)
+    //         return false;
+    //     if (getClass() != obj.getClass())
+    //         return false;
+    //     Punto2 other = (Punto2) obj;
+    //     if (x != other.x)
+    //         return false;
+    //     if (y != other.y)
+    //         return false;
+    //     return true;
+    // }
 
     //Secondo equals: instanceof
     @Override

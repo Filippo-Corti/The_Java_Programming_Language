@@ -27,7 +27,7 @@ public class Main {
 
         //Ora la simmetrica vale!
 
-        Punto2 p4 = new Punto3(0, 0, -1);
+        Punto3 p4 = new Punto3(0, 0, -1);
 
         System.out.println(p1.equals(p4)); //true
         System.out.println(p1.equals(p2)); //true
