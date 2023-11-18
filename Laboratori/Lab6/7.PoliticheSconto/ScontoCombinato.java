@@ -1,47 +1,55 @@
-public class ScontoCombinato extends PoliticaSconto {
-    //OVERVIEW: Politica di Sconto Combinata da due PoliticaSconto. Estende PoliticaSconto
-    //  le due PoliticaSconto devono avere gli stessi parametri di ScontoCombinato ????
+public class ScontoCombinato implements PoliticaSconto {
+    // OVERVIEW: Politica di Sconto Combinata da due ScontoSemplice.
+    // Le due politiche di sconto ScontoSemplice devono avere stesso numeroArticoli
+    // e prezzoArticolo.
+    // Implementa PoliticaSconto
 
-    //NOTA: da sistemare facendo in modo che PoliticaSconto sia un'interfaccia con solo il metodo
-    //  La classe astratta diventa PoliticaSemplice, che implementa PoliticaSconto
-    //  ScontoCombinato implementa PoliticaSconto e contiene due PoliticaSemplice
+    // attributes
+    private ScontoSemplice politica1;
+    private ScontoSemplice politica2;
 
-    //attributes
-    private PoliticaSconto politica1;
-    private PoliticaSconto politica2;
-
-    //constructors
-    public ScontoCombinato(int numeroArticoli, double prezzoArticolo, PoliticaSconto p1, PoliticaSconto p2) throws IllegalArgumentException {
-        //MODIFIES: this
-        //EFFECTS: inizializza un nuovo sconto quantità con super(numeroArticoli, prezzoArticolo) + 2 PoliticaSconto
-        //  lancia IllegalArgumentException se p1 o p2 è nullo
-        super(numeroArticoli, prezzoArticolo);
+    // constructors
+    public ScontoCombinato(ScontoSemplice p1, ScontoSemplice p2) throws IllegalArgumentException {
+        // MODIFIES: this
+        // EFFECTS: inizializza un nuovo sconto quantità con 2 Scontosemplice
+        // lancia IllegalArgumentException se p1 o p2 è nullo o se p1 != p2
         if (p1 == null || p2 == null)
             throw new IllegalArgumentException("Politica Sconto nulla");
-    
+
+        if (!p1.equals(p2))
+            throw new IllegalArgumentException("Politiche di Sconto non Combinabili");
+
         this.politica1 = p1;
         this.politica2 = p2;
-        
+
         assert repOk();
     }
 
-    //methods
+    // methods
     @Override
     public double calcolaSconto() {
-        return (numeroArticoli / n) * prezzoArticolo;    
+        return max(politica1.calcolaSconto(), politica2.calcolaSconto());
     }
 
-    @Override
+    private double max(double d1, double d2) {
+        if (d1 > d2)
+            return d1;
+        return d2;
+    }
+
     public boolean repOk() {
         if (politica1 == null || politica2 == null)
             return false;
 
-        return super.repOk();
+        if (!politica1.equals(politica2))
+            return false;
+
+        return true;
     }
-    
+
     @Override
     public String toString() {
-        return super.toString().replace("generica", "'Sconto Combinato'")
+        return super.toString().replace("generica", "'Sconto Combinato'");
     }
 
 }

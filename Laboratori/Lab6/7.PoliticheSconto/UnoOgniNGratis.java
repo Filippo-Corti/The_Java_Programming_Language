@@ -1,4 +1,4 @@
-public class UnoOgniNGratis extends PoliticaSconto {
+public class UnoOgniNGratis extends ScontoSemplice {
     // OVERVIEW: Politica di Sconto del tipo "Uno Ogni N è Gratis". Estende
     // PoliticaSconto. Immutabile
 

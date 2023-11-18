@@ -1,4 +1,4 @@
-public class ScontoQuantita extends PoliticaSconto {
+public class ScontoQuantita extends ScontoSemplice {
     //OVERVIEW: Politica di Sconto del tipo "Sconto Quantità". Estende PoliticaSconto. Immutabile
 
     //attributes
@@ -43,7 +43,7 @@ public class ScontoQuantita extends PoliticaSconto {
     
     @Override
     public String toString() {
-        return super.toString().replace("generica", "'Sconto Quantita''") + " - Sconto del " + percentuale + "% per quantità superiori a " + (minimo-1);
+        return super.toString().replace("generica", "'Sconto Quantita''") + " - Sconto del " + percentuale + "% per quantita' superiori a " + (minimo-1);
     }
 
 }
