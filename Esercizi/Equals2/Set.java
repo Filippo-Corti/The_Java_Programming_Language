@@ -2,13 +2,13 @@ import java.util.NoSuchElementException;
 
 public class Set {
 
-    private Punto2[] els; // tipo Object
+    private Punto[] els; // tipo Object
 
-    public void insert(Punto2 x) {
+    public void insert(Punto x) {
         if (els == null)
-            els = new Punto2[] { x };
+            els = new Punto[] { x };
         else if (!this.contains(x)) {
-            Punto2[] tmp = new Punto2[els.length + 1];
+            Punto[] tmp = new Punto[els.length + 1];
             for (int i = 0; i < els.length; i++)
                 tmp[i] = els[i];
             tmp[els.length] = x;
@@ -16,14 +16,14 @@ public class Set {
         }
     }
 
-    public boolean contains(Punto2 x) {
-        for (Punto2 i : els)
+    public boolean contains(Punto x) {
+        for (Punto i : els)
             if (i.equals(x))
                 return true;
         return false;
     }
 
-    public Punto2 choose() {
+    public Punto choose() {
         if (this.els == null)
             throw new NoSuchElementException(); // se vuoto
         return els[0]; // ritorna primo
@@ -31,7 +31,7 @@ public class Set {
 
     public String toString() {
         String ret = "";
-        for (Punto2 o : els)
+        for (Punto o : els)
             ret += o + " ";
         return ret;
     }

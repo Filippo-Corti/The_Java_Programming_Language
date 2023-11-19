@@ -41,7 +41,7 @@ public class Main {
         punti.insert(p1);
         punti.insert(p2);
         System.out.println(punti.contains(p2)); //true
-        System.out.println(punti);
+        System.out.println(punti); // Solo p1
 
     }
 }
