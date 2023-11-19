@@ -1,4 +1,4 @@
-public class Punto2 {
+public class Punto2 implements Punto{
     
     private int x, y;
 
@@ -48,6 +48,13 @@ public class Punto2 {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Punto2 [x=" + x + ", y=" + y + "]";
+    }
+
+    
 
 
 }

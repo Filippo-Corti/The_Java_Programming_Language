@@ -37,5 +37,11 @@ public class Main {
 
         // => Devo scegliere cosa preferisco rompere
 
+        Set punti = new Set();
+        punti.insert(p1);
+        punti.insert(p2);
+        System.out.println(punti.contains(p2)); //true
+        System.out.println(punti);
+
     }
 }

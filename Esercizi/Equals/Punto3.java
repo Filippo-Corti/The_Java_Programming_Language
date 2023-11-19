@@ -1,5 +1,5 @@
 
-public class Punto3 extends Punto2 {
+public class Punto3 extends Punto2{
 
     private int z;
 
@@ -70,5 +70,12 @@ public class Punto3 extends Punto2 {
             return super.equals(obj);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Punto3 [z=" + z + "]";
+    }
+
+    
 
 }
