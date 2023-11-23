@@ -25,7 +25,7 @@ public class Cerchio implements Figura {
 
     @Override
     public String toString() {
-        return "Quadrato " + raggio + " - Perimetro: " + perimetro();
+        return "Quadrato " + raggio + " - Area: " + area() + " - Perimetro: " + perimetro();
     }
 
     public boolean repOk() {
@@ -33,6 +33,11 @@ public class Cerchio implements Figura {
             return false;
 
         return true;
+    }
+
+    @Override
+    public double area() {
+        return Math.PI * raggio * raggio;
     }
     
 }

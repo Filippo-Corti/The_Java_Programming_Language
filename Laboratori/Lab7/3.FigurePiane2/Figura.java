@@ -1,7 +1,9 @@
 public interface Figura extends Comparable<Figura> { 
-    //OVERVIEW: interfaccia che accomuna Figure Piane. Comparabile secondo il perimetro
+    //OVERVIEW: interfaccia che accomuna Figure Piane. Comparabile di default secondo il perimetro
 
     public double perimetro();
+
+    public double area();
 
     @Override
     public default int compareTo(Figura f) {

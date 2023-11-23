@@ -1,9 +1,12 @@
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Collage {
-    // OVERVIEW: classe che descrive una lista di Figure Geometriche immutabili
+public class Collage implements Iterable<Figura>{
+    // OVERVIEW: classe che descrive una lista di Figure Geometriche immutabili.
+    //  Iterabile sulle sue Figure (non che fosse necessario ma viene comodo nel main)
 
     // attributes
     ArrayList<Figura> figure = new ArrayList<>();
@@ -42,6 +45,19 @@ public class Collage {
         assert repOk();
     }
 
+    public void ordinaPerArea() {
+        // MODIFIES: this
+        // EFFECTS: ordina this.figure secondo il loro perimetro
+        figure.sort(new Comparator<>() {
+            @Override
+            public int compare(Figura o1, Figura o2) {
+                return Double.compare(o2.area(), o1.area()); //Ordine decrescente
+            }
+        });
+
+        assert repOk();
+    }
+
     @Override
     public String toString() {
         String res = "";
@@ -61,6 +77,25 @@ public class Collage {
         }
 
         return true;
+    }
+
+    @Override
+    public Iterator<Figura> iterator() {
+        return new Iterator<>() {
+
+            Iterator<Figura> i = figure.iterator();
+
+            @Override
+            public boolean hasNext() {
+                return i.hasNext();
+            }
+
+            @Override
+            public Figura next() {
+                return i.next();
+            }
+
+        };
     }
 
     public static void main(String[] args) {
@@ -103,9 +138,21 @@ public class Collage {
             }
         }
 
+        double areaTotale = 0;
+        for (Figura figura : collage) {
+            areaTotale += figura.area();
+        }
+        
+        System.out.println("\nArea totale: " + areaTotale);
+
+        System.out.println("\nOrdinati per area:");
+        collage.ordinaPerArea();
+        System.out.println(collage);
+
         System.out.println("\nOrdinati per perimetro:");
         collage.ordinaPerPerimetro();
         System.out.println(collage);
     }
+
 
 }

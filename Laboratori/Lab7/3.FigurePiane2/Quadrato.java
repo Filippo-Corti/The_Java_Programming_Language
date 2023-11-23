@@ -25,7 +25,7 @@ public class Quadrato implements Figura {
 
     @Override
     public String toString() {
-        return "Quadrato " + lato + " - Perimetro: " + perimetro();
+        return "Quadrato " + lato + " - Area: " + area() + " - Perimetro: " + perimetro();
     }
 
     public boolean repOk() {
@@ -33,6 +33,11 @@ public class Quadrato implements Figura {
             return false;
 
         return true;
+    }
+
+    @Override
+    public double area() {
+        return lato * lato;
     }
     
 }

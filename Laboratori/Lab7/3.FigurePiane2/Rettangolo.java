@@ -26,7 +26,7 @@ public class Rettangolo implements Figura {
 
     @Override
     public String toString() {
-        return "Rettangolo " + base + " " + altezza + " - Perimetro: " + perimetro();
+        return "Rettangolo " + base + " " + altezza + " - Area: " + area() + " - Perimetro: " + perimetro();
     }
 
     public boolean repOk() {
@@ -34,6 +34,11 @@ public class Rettangolo implements Figura {
             return false;
 
         return true;
+    }
+
+    @Override
+    public double area() {
+        return base * altezza;
     }
     
 }
