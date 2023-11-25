@@ -7,9 +7,9 @@ import java.util.stream.Collector;
 
 public class Main {
 
-    static BiFunction<Double, Double, Double> pow = (base, exp) -> Math.pow(base, exp);
-
     static Function<Double, Function<Double, Double>> pow2 = (base) -> (exp) -> Math.pow(base, exp);
+    
+    static BiFunction<Double, Double, Double> pow = (base, exp) -> Math.pow(base, exp);
 
     static Function<Double, Double> square = (x) -> pow.apply(x, 2.);
 
