@@ -1,22 +1,22 @@
-public class Decorazione {
-    //OVERVIEW: classe che descrive una decorazione natalizia
+public class Decorazione implements Cloneable {
+    // OVERVIEW: classe che descrive una decorazione natalizia. Immutabile
 
-    //attributes
-    public final String nome;
-    public final double peso;
+    // attributes
+    private final String nome;
+    private final double peso;
 
-    //constructors
+    // constructors
     public Decorazione(String nome, double peso) throws NullPointerException, IllegalArgumentException {
-        //MODIFIES: this
-        //EFFECTS: inizializza una nuova decorazione con nome e peso
-        //  lancia NullPointerException se nome è nullo
-        //  lancia IllegalArgumentException se nome è vuoto o se peso <= 0
+        // MODIFIES: this
+        // EFFECTS: inizializza una nuova decorazione con nome e peso
+        // lancia NullPointerException se nome è nullo
+        // lancia IllegalArgumentException se nome è vuoto o se peso <= 0
         if (nome == null)
             throw new NullPointerException("Nome nullo");
-        
+
         if (nome.equals(""))
             throw new IllegalArgumentException("Nome vuoto");
-    
+
         if (peso <= 0)
             throw new IllegalArgumentException("Peso <= 0");
 
@@ -24,21 +24,50 @@ public class Decorazione {
         this.peso = peso;
     }
 
-    //methods
+    // methods
+    public double getPeso() {
+        return peso;
+    }
+
+    public String getNome() {
+        return nome;
+    }
 
     @Override
     public String toString() {
         return "Decorazione: " + nome + "; peso: " + peso;
     }
-    
-    public double getPeso() {
-        return peso;
-    }
-    
+
     @Override
-    public Decorazione clone() {
-        Decorazione d =  new Decorazione(nome, peso);
+    public Object clone() {
+        Decorazione d = null;
+        try {
+            d = (Decorazione) super.clone();
+        } catch (CloneNotSupportedException e) {
+            d = new Decorazione(nome, peso);
+        }
         return d;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Decorazione other = (Decorazione) obj;
+        if (nome == null) {
+            if (other.nome != null)
+                return false;
+        } else if (!nome.equals(other.nome))
+            return false;
+        if (Double.doubleToLongBits(peso) != Double.doubleToLongBits(other.peso))
+            return false;
+        return true;
+    }
+
+    
 
 }

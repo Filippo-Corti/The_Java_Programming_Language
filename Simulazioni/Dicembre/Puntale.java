@@ -1,5 +1,5 @@
 public class Puntale extends Decorazione {
-    //OVERVIEW: Puntale è una Decorazione particolare
+    //OVERVIEW: Puntale è una Decorazione particolare. Immutabile
 
     public Puntale(String nome, double peso) throws NullPointerException, IllegalArgumentException {
         super(nome, peso);
@@ -8,11 +8,6 @@ public class Puntale extends Decorazione {
     @Override
     public String toString() {
         return super.toString() + ", puntale";
-    }
-
-    @Override
-    public Puntale clone(){
-        return new Puntale(nome, peso);
     }
 
 }

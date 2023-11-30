@@ -1,10 +1,10 @@
 public class DecorazioneElettrica extends Decorazione implements Comparable<DecorazioneElettrica>{
     // OVERVIEW: classe che descrive una decorazione natalizia elettrica.
-    // Estende decorazione
+    // Estende Decorazione
     // Comparabile in base alla potenza
 
     // attributes
-    public final double potenza;
+    private final double potenza;
     private boolean accesa;
 
     // contructors
@@ -25,7 +25,10 @@ public class DecorazioneElettrica extends Decorazione implements Comparable<Deco
     }
 
     //methods
-
+    public double getPotenza() {
+        return potenza;
+    }
+    
     public boolean isAccesa() {
         return accesa;
     }
@@ -47,15 +50,9 @@ public class DecorazioneElettrica extends Decorazione implements Comparable<Deco
         return Double.compare(this.potenza, d.potenza);
     }
 
-
     @Override
     public String toString() {
         return super.toString() + ", potenza: " + potenza + ", " + ((accesa) ? "accesa" : "spenta");
     }
 
-    @Override
-    public DecorazioneElettrica clone() {
-        DecorazioneElettrica d = new DecorazioneElettrica(nome, peso, potenza);
-        return d;
-    }
 }

@@ -14,7 +14,7 @@ public class AlberoNatalizio implements Iterable<Decorazione>{
     // constructors
     public AlberoNatalizio(double caricoMassimo, double potenzaMassima) throws IllegalArgumentException {
         // MODIFIES: this
-        // EFFECTS: inializzia this
+        // EFFECTS: inizializa this
         // lancia IllegalArgumentException se caricoMassimo <= 0 oppure potenzaMassima
         // <= 0
         if (caricoMassimo <= 0)
@@ -39,10 +39,10 @@ public class AlberoNatalizio implements Iterable<Decorazione>{
         if (d == null)
             throw new NullPointerException("Decorazione nulla");
         
-        if (d instanceof Puntale && hasTopper())
+        if (d instanceof Puntale && contaPuntali() > 0)
             throw new TopperExistsException("Puntale già aggiunto");
 
-        if (getSommaPesi() + d.peso > caricoMassimo)
+        if (getSommaPesi() + d.getPeso() > caricoMassimo)
             throw new WeightReachedException("Carico superato");
         
         decorazioni.add((Decorazione) d.clone());
@@ -64,67 +64,57 @@ public class AlberoNatalizio implements Iterable<Decorazione>{
         assert repOk();
     }
 
-    public void accendiAlbero() {
+    public void accendi() {
         // MODIFIES: this
         // EFFECTS: accende le decorazioni elettriche di this dalla meno alla più
         // richiedente. Si ferma quando raggiunge la potenzaMassima di this
-        ArrayList<DecorazioneElettrica> decorazioniElettriche = new ArrayList<>();
-        for (Decorazione decorazione : decorazioni) {
-            if (decorazione instanceof DecorazioneElettrica) {
-                decorazioniElettriche.add((DecorazioneElettrica)decorazione);
-            }
-        }
 
-        decorazioniElettriche.sort(null);
+        ArrayList<DecorazioneElettrica> decorazioniElettriche = new ArrayList<>(decorazioni.stream().filter(t -> t instanceof DecorazioneElettrica).map(t -> (DecorazioneElettrica)t).toList());
+
+        decorazioniElettriche.forEach(t -> t.spegni()); //Spegni tutte le decorazioni
+
+        decorazioniElettriche.sort(null); //Ordina le decorazioni per potenza
 
         double carico = 0;
         for (int i = 0; i < decorazioniElettriche.size(); i++) {
-            if (carico + decorazioniElettriche.get(i).potenza < caricoMassimo) {
+            if (carico + decorazioniElettriche.get(i).getPotenza() < caricoMassimo) //Accendi fin tanto che è possibile
                 decorazioniElettriche.get(i).accendi();
-            }
+            else 
+                break;
         }
     }
 
     public double getSommaPesi() {
+        //EFFECTS: ritorna la somma dei pesi delle decorazioni dell'albero
         return decorazioni.stream().mapToDouble(Decorazione::getPeso).reduce(0, (s, el) -> s + el);
     }
 
     public double getSommaPotenze() {
-        double carico = 0;
-        for (Decorazione decorazione : decorazioni) {
-            if (decorazione instanceof DecorazioneElettrica) {
-               carico += ((DecorazioneElettrica)decorazione).potenza;
-            }
-        }
-        return carico;
+        //EFFECTS: ritorna la somma delle potenze delle decorazioni accese dell'albero
+        return decorazioni.stream().filter(t -> ((t instanceof DecorazioneElettrica) && ((DecorazioneElettrica) t).isAccesa())).map(t -> (DecorazioneElettrica)t).mapToDouble(DecorazioneElettrica::getPotenza).reduce(0, (s, el) -> s + el);
+        //E' la cosa più bella che abbia mai avuto l'onore di scrivere ^^^
     }
 
-    private boolean hasTopper() {
+    private double contaPuntali() {
+        int c = 0;
         for (Decorazione decorazione : decorazioni) {
             if (decorazione instanceof Puntale)
-                return true;
+                c++;
         }
-        return false;
+        return c;
     }
 
     public boolean repOk() {
         if (decorazioni == null)
             return false;
 
-        boolean puntale = false;
-
-        for (Decorazione d : decorazioni) {
-            if (d == null)
-            return false;
-
-        
-            if (d instanceof Puntale)  {
-                if (puntale == true)
-                    return false;
-                puntale = true;
-            }
-
+        for (Decorazione decorazione : decorazioni) {
+            if (decorazione == null)
+                return false;
         }
+
+        if (contaPuntali() > 1)
+            return false;
 
         if (getSommaPesi() > caricoMassimo)
             return false;

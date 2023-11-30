@@ -1,4 +1,3 @@
-package Soluzione;
 import java.util.Scanner;
 
 public class Test {
