@@ -91,12 +91,7 @@ public class Day2bis {
     public static void main(String[] args) {
         ArrayList<Game> input = parseInput();
 
-        int count = 0;
-        for (Game game : input) {
-                count += game.getPower();
-        }
-
-        System.out.println(count);
+        System.out.println(input.stream().mapToInt(Game::getPower).sum());
     }
 
 }
