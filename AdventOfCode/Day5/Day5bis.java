@@ -11,11 +11,9 @@ public class Day5bis {
     static class Input {
     
         ArrayList<Map> maps;
-        String seeds;
 
-        public Input(ArrayList<Map> maps, String seeds) {
+        public Input(ArrayList<Map> maps) {
             this.maps = maps;
-            this.seeds = seeds;
         }
 
 
@@ -70,7 +68,6 @@ public class Day5bis {
     public static Input parseInput() {
 
         ArrayList<Map> maps = new ArrayList<>();
-        String seeds = "";
 
         File f = new File("input.txt");
         Scanner s = null;
@@ -81,15 +78,7 @@ public class Day5bis {
             System.exit(1);
         }
 
-        String[] seedsString = s.nextLine().split(": ")[1].split(" ");
-
-        for (int i = 0; i < seedsString.length; i+=2) {
-            long l1 = Long.parseLong(seedsString[i]);
-            long l2 = Long.parseLong(seedsString[i + 1]);
-            for (int j = 0; j < l2; j++) {
-                seeds += (l1 + j) + " ";
-            }
-        }
+       s.nextLine(); //Skip the seeds (for the moment)
 
         s.nextLine(); //Empty line
         s.nextLine(); //Seed-to-oil Map
@@ -112,7 +101,7 @@ public class Day5bis {
         }
 
         maps.add(new Map(m));
-        return new Input(maps, seeds);
+        return new Input(maps);
     }
 
     public static long mapThroughAll(ArrayList<Map> ms, long x) {
@@ -123,11 +112,51 @@ public class Day5bis {
         return res;
     }
 
+    public static long part2(ArrayList<Map> maps) {
+        File f = new File("input.txt");
+        Scanner s = null;
+        try {
+             s = new Scanner(f);
+        } catch (FileNotFoundException e ){
+            System.out.println("File not found");
+            System.exit(1);
+        }
+
+        s.next(); //seeds:
+
+        ArrayList<Long> mins = new ArrayList<>();
+
+        while(s.hasNext()) {
+            String in = s.next();
+            if (in.equals("seed-to-soil"))
+                break; //End of seeds?
+            long in1 = Long.parseLong(in);
+            long in2 = s.nextLong();
+
+
+            long min = mapThroughAll(maps, in1);
+            for (long i = 1; i < in2; i++) {
+                long curr = mapThroughAll(maps, in1 + i);
+                if (min > curr)
+                    min = curr;
+            }
+
+            mins.add(min);
+            System.out.println(min);
+
+
+        }
+
+        return mins.stream().min((o1, o2) -> Long.compare(o1, o2)).get();
+
+    }
+
     public static void main(String[] args) {
         Input input = parseInput();
 
-        System.out.println(input.seeds);
-        //System.out.println(input.seeds.stream().map((x) -> mapThroughAll(input.maps, x)).min((o1, o2) -> Long.compare(o1, o2)));
+
+
+        System.out.println(part2(input.maps));
 
     }
 
