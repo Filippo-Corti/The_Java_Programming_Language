@@ -1,10 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.regex.*;
 
 public class Day5bis {
 
@@ -153,9 +150,6 @@ public class Day5bis {
 
     public static void main(String[] args) {
         Input input = parseInput();
-
-
-
         System.out.println(part2(input.maps));
 
     }
