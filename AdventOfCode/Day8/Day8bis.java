@@ -93,37 +93,20 @@ public class Day8bis {
 
         for (String node : nodes) {
             int c = 0;
-            String start = node;
-
-            int foundZ = 0;
-
-            while (!node.equals(start) || c == 0) {
+            while (true) {
                 if (m.directions.charAt(c % m.directions.length()) == 'L') {
                     node = m.map.get(node).left;
                 } else {
                     node = m.map.get(node).right;
                 }
-
                 if (node.charAt(2) == 'Z') {
-                    if (foundZ == 0) {
-                        foundZ = c;
-                    } else {
-                        zFound.add(c - foundZ);
-                        break;
-                    }
+                    zFound.add(c + 1);
+                    break;
                 }
                 c++;
             }
         }
-        System.out.println(zFound);
-
-        long mcm = zFound.get(0);
-
-        for (int i = 1; i < zFound.size(); i++) {
-            mcm = mcm(mcm, zFound.get(i));
-        }
-
-        return mcm;
+        return zFound.stream().mapToLong(value -> (long) value).reduce(zFound.get(0), (mcm, el) -> mcm(mcm, el));
     }
 
     static long mcm(long a, long b) {
@@ -138,15 +121,6 @@ public class Day8bis {
             a = t;
         }
         return a;
-    }
-
-    private static boolean endingPoint(String[] nodes) {
-        for (String s : nodes) {
-            if (s.charAt(2) != 'Z') {
-                return false;
-            }
-        }
-        return true;
     }
 
     private static String[] getStartingNodes(Map m) {
@@ -168,6 +142,5 @@ public class Day8bis {
         Map m = parseInput();
 
         System.out.println(part2(m));
-
     }
 }
