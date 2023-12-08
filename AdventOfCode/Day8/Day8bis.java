@@ -95,6 +95,8 @@ public class Day8bis {
             int c = 0;
             String start = node;
 
+            int foundZ = 0;
+
             while (!node.equals(start) || c == 0) {
                 if (m.directions.charAt(c % m.directions.length()) == 'L') {
                     node = m.map.get(node).left;
@@ -103,15 +105,16 @@ public class Day8bis {
                 }
 
                 if (node.charAt(2) == 'Z') {
-                    zFound.add(c);
-                    break;
+                    if (foundZ == 0) {
+                        foundZ = c;
+                    } else {
+                        zFound.add(c - foundZ);
+                        break;
+                    }
                 }
-
-                // System.out.println(node);
                 c++;
             }
         }
-
         System.out.println(zFound);
 
         long mcm = zFound.get(0);
