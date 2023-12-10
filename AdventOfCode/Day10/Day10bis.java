@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Day10 {
+public class Day10bis {
 
     static class Game {
         ArrayList<ArrayList<Cell>> map;
@@ -32,12 +32,12 @@ public class Day10 {
                 return true;
             if (obj == null)
                 return false;
-            if (obj.getClass() != this.getClass()) 
+            if (obj.getClass() != this.getClass())
                 return false;
-            Cell c = (Cell)obj;
-            if (c.row != this.row) 
+            Cell c = (Cell) obj;
+            if (c.row != this.row)
                 return false;
-            if (c.col != this.col) 
+            if (c.col != this.col)
                 return false;
             return true;
         }
@@ -95,7 +95,6 @@ public class Day10 {
             curr = next;
         }
 
-        System.out.println(game.visited);
         printVisited(game);
         System.out.println(game.visited.size() / 2);
     }
@@ -105,27 +104,27 @@ public class Day10 {
             case '|':
                 if (prev.row > curr.row) // Going UP
                     return game.map.get(curr.row - 1).get(curr.col);
-                return game.map.get(curr.row + 1).get(curr.col); //Going DOWN
+                return game.map.get(curr.row + 1).get(curr.col); // Going DOWN
             case '-':
                 if (prev.col > curr.col) // Going LEFT
                     return game.map.get(curr.row).get(curr.col - 1);
-                return game.map.get(curr.row).get(curr.col + 1); //Going RIGHT
+                return game.map.get(curr.row).get(curr.col + 1); // Going RIGHT
             case 'L':
                 if (prev.col != curr.col) // Going UP
                     return game.map.get(curr.row - 1).get(curr.col);
-                return game.map.get(curr.row).get(curr.col + 1); //Going RIGHT
+                return game.map.get(curr.row).get(curr.col + 1); // Going RIGHT
             case 'J':
                 if (prev.col != curr.col) // Going UP
                     return game.map.get(curr.row - 1).get(curr.col);
-                return game.map.get(curr.row).get(curr.col - 1); //Going LEFT
+                return game.map.get(curr.row).get(curr.col - 1); // Going LEFT
             case '7':
                 if (prev.col != curr.col) // Going DOWN
                     return game.map.get(curr.row + 1).get(curr.col);
-                return game.map.get(curr.row).get(curr.col - 1); //Going LEFT
+                return game.map.get(curr.row).get(curr.col - 1); // Going LEFT
             case 'F':
                 if (prev.col != curr.col) // Going DOWN
                     return game.map.get(curr.row + 1).get(curr.col);
-                return game.map.get(curr.row).get(curr.col + 1); //Going RIGHT
+                return game.map.get(curr.row).get(curr.col + 1); // Going RIGHT
             default:
                 System.out.println("Abbiamo un problema");
                 break;
@@ -151,11 +150,44 @@ public class Day10 {
 
     private static void printVisited(Game game) {
         for (ArrayList<Cell> row : game.map) {
+            boolean ontheLine = false;
+            boolean outside = true;
+            boolean prevCurve = false;
             for (Cell cell : row) {
-                if(game.visited.contains(cell))
-                    System.out.print(cell.value);
-                else
-                    System.out.print(".");
+                if (game.visited.contains(cell)) {
+                    if (cell.value != '-') {
+                        if (cell.value == '|') {
+                            System.out.print(cell.value);
+                            if ()
+                            outside = !outside;
+                        } else {
+                            if (ontheLine) {
+                                System.out.print("S");
+                                ontheLine = true;
+                            } else {
+                                System.out.print("E");
+                                ontheLine = false;
+                            }
+                        }
+                    } else {
+                        System.out.print(cell.value);
+                    }
+                    // if (cell.value != '-' || !prevCurve)
+                    // outside = !outside;
+                } else {
+                    // if (outside)
+                    // System.out.print("O");
+                    // else
+                    // System.out.print("I");
+                    if (outside)
+                        System.out.print("O");
+                    else
+                        System.out.print("I");
+                }
+                // if (cell.value != '-' && cell.value != '|')
+                // prevCurve = true;
+                // else
+                // prevCurve = false;
             }
             System.out.println();
         }
