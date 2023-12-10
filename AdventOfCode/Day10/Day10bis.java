@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Day10bis {
 
@@ -96,7 +98,7 @@ public class Day10bis {
         }
 
         printVisited(game);
-        System.out.println(game.visited.size() / 2);
+        // System.out.println(game.visited.size() / 2);
     }
 
     private static Cell findNextDirection(Game game, Cell curr, Cell prev) {
@@ -133,64 +135,108 @@ public class Day10bis {
     }
 
     private static Cell findFirstDirection(Game game) {
-        if (game.map.get(game.rS - 1).get(game.cS).value == '|' || game.map.get(game.rS - 1).get(game.cS).value == '7'
-                || game.map.get(game.rS - 1).get(game.cS).value == 'F')
-            return game.map.get(game.rS - 1).get(game.cS);
-        if (game.map.get(game.rS + 1).get(game.cS).value == '|' || game.map.get(game.rS + 1).get(game.cS).value == 'J'
-                || game.map.get(game.rS + 1).get(game.cS).value == 'L')
-            return game.map.get(game.rS + 1).get(game.cS);
-        if (game.map.get(game.rS).get(game.cS - 1).value == '-' || game.map.get(game.rS).get(game.cS - 1).value == 'F'
-                || game.map.get(game.rS).get(game.cS - 1).value == 'L')
-            return game.map.get(game.rS).get(game.cS - 1);
-        if (game.map.get(game.rS).get(game.cS + 1).value == '-' || game.map.get(game.rS).get(game.cS + 1).value == '7'
-                || game.map.get(game.rS).get(game.cS + 1).value == 'J')
-            return game.map.get(game.rS).get(game.cS + 1);
+        try {
+            if (game.map.get(game.rS - 1).get(game.cS).value == '|'
+                    || game.map.get(game.rS - 1).get(game.cS).value == '7'
+                    || game.map.get(game.rS - 1).get(game.cS).value == 'F')
+                return game.map.get(game.rS - 1).get(game.cS);
+        } catch (IndexOutOfBoundsException e) {
+        }
+        try {
+            if (game.map.get(game.rS + 1).get(game.cS).value == '|'
+                    || game.map.get(game.rS + 1).get(game.cS).value == 'J'
+                    || game.map.get(game.rS + 1).get(game.cS).value == 'L')
+                return game.map.get(game.rS + 1).get(game.cS);
+        } catch (IndexOutOfBoundsException e) {
+        }
+        try {
+            if (game.map.get(game.rS).get(game.cS - 1).value == '-'
+                    || game.map.get(game.rS).get(game.cS - 1).value == 'F'
+                    || game.map.get(game.rS).get(game.cS - 1).value == 'L')
+                return game.map.get(game.rS).get(game.cS - 1);
+        } catch (IndexOutOfBoundsException e) {
+        }
+        try {
+            if (game.map.get(game.rS).get(game.cS + 1).value == '-'
+                    || game.map.get(game.rS).get(game.cS + 1).value == '7'
+                    || game.map.get(game.rS).get(game.cS + 1).value == 'J')
+                return game.map.get(game.rS).get(game.cS + 1);
+        } catch (IndexOutOfBoundsException e) {
+        }
         return null;
     }
 
     private static void printVisited(Game game) {
+        int countIn = 0;
         for (ArrayList<Cell> row : game.map) {
-            boolean ontheLine = false;
-            boolean outside = true;
-            boolean prevCurve = false;
+            String line = "";
+            // Build line
             for (Cell cell : row) {
+                // Purtroppo devo cambiare a mano S se no impazzisco
                 if (game.visited.contains(cell)) {
-                    if (cell.value != '-') {
-                        if (cell.value == '|') {
-                            System.out.print(cell.value);
-                            if ()
-                            outside = !outside;
-                        } else {
-                            if (ontheLine) {
-                                System.out.print("S");
-                                ontheLine = true;
-                            } else {
-                                System.out.print("E");
-                                ontheLine = false;
-                            }
-                        }
-                    } else {
-                        System.out.print(cell.value);
-                    }
-                    // if (cell.value != '-' || !prevCurve)
-                    // outside = !outside;
+                    if (cell.value == 'S')
+                        line += '-';
+                    else
+                        line += cell.value;
                 } else {
-                    // if (outside)
-                    // System.out.print("O");
-                    // else
-                    // System.out.print("I");
+                    line += ".";
+                }
+            }
+            // Deal with false Changes of Inside-Outside
+            Pattern falseChangeOfContext1 = Pattern.compile("F[-]*7");
+            Pattern falseChangeOfContext2 = Pattern.compile("L[-]*J");
+            Matcher m1 = falseChangeOfContext1.matcher(line);
+            Matcher m2 = falseChangeOfContext2.matcher(line);
+            while (m1.find()) {
+                String found = m1.group();
+                line = line.replace(found, "X".repeat(found.length()));
+            }
+            while (m2.find()) {
+                String found = m2.group();
+                line = line.replace(found, "X".repeat(found.length()));
+            }
+            // Deal with real Changes of Inside-Outside
+            Pattern realChangeOfContext1 = Pattern.compile("F[-]*J");
+            Pattern realChangeOfContext2 = Pattern.compile("L[-]*7");
+            Matcher m3 = realChangeOfContext1.matcher(line);
+            Matcher m4 = realChangeOfContext2.matcher(line);
+            while (m3.find()) {
+                String found = m3.group();
+                line = line.replace(found, "S" + "Y".repeat(found.length() - 2) + "E");
+            }
+            while (m4.find()) {
+                String found = m4.group();
+                line = line.replace(found, "S" + "Y".repeat(found.length() - 2) + "E");
+            }
+            // Find Inside & Outside
+            boolean outside = true;
+            for (int i = 0; i < line.length(); i++) {
+                char c = line.charAt(i);
+                if (c == 'S') {
+                    while (c != 'E' && i < line.length() - 1) {
+                        i++;
+                        c = line.charAt(i);
+                        System.out.print(c);
+                    }
+                    outside = !outside;
+                }
+                if (c == '|')
+                    outside = !outside;
+                if (c == '.') {
                     if (outside)
                         System.out.print("O");
-                    else
+                    else {
                         System.out.print("I");
+                        countIn++;
+                    }
+                } else {
+                    System.out.print(c);
                 }
-                // if (cell.value != '-' && cell.value != '|')
-                // prevCurve = true;
-                // else
-                // prevCurve = false;
             }
             System.out.println();
+
         }
+        System.out.println("CountIn: " + countIn);
     }
 
     public static void main(String[] args) {
