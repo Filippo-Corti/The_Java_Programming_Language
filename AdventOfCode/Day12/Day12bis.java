@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import javax.sound.midi.Patch;
 
-public class Day12 {
+public class Day12bis {
 
     static class ConditionRecord {
         String data;
@@ -99,6 +99,8 @@ public class Day12 {
         while (s.hasNextLine()) {
             String[] in = s.nextLine().split(" ");
             ArrayList<Integer> blocks = new ArrayList<>();
+            in[0] = in[0].repeat(5);
+            in[1] = in[1].repeat(5);
             String[] inBlocks = in[1].split(",");
             for (String string : inBlocks) {
                 blocks.add(Integer.parseInt(string));
