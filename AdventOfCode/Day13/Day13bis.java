@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Day13 {
+public class Day13bis {
 
     public static boolean isPalindrome(String s) {
         for (int i = 0; i < s.length() / 2; i++) {
@@ -27,7 +27,26 @@ public class Day13 {
             return "Pattern [rows=" + rows + ", cols=" + cols + "]";
         }
 
-        public int getLineOfReflection() {
+        public int getLineOfReflectionWithSmudge() {
+            for (int i = 0; i < rows.size(); i++) {
+                String currentRow = rows.get(i);
+                String currentCol = cols.get(i);
+                for (int j = 0; j < currentRow.length(); j++) {
+                    ArrayList<String> copyRows = new ArrayList<>(rows);
+                    ArrayList<String> copyCols = new ArrayList<>(cols);
+                    //Modifico carattere in righe e colonne
+                    copyRows.set(i, currentRow.substring(0, j) + ((currentRow.charAt(j) == '.') ? '#' : '.') + currentRow.substring(j+1));
+                    copyCols.set(j, currentCol.substring(0, i) + ((currentCol.charAt(i) == '.') ? '#' : '.') + currentCol.substring(i+1));
+                    //Testo la nuova lineOfReflection
+                    System.out.println(copyRows);
+                    System.out.println(copyCols);
+                    return -1;
+                }
+            }
+            return -1;
+        }
+
+        public int getLineOfReflection(ArrayList<String> rows, ArrayList<String> cols) {
             // Provo tra le colonne
             String firstRow = rows.get(0);
             for (int i = 1; i <= firstRow.length() - 1; i++) {
@@ -36,7 +55,6 @@ public class Day13 {
                 int min = (before.length() < after.length()) ? before.length() : after.length();
                 if (isPalindrome(firstRow.substring(i - min, i + min))) {
                     if (checkIfCorrect(rows, i, min)) {
-                        System.out.println(i);
                         return i;
                     }
                 }
@@ -48,7 +66,6 @@ public class Day13 {
                 int min = (before.length() < after.length()) ? before.length() : after.length();
                 if (isPalindrome(firstCol.substring(i - min, i + min))) {
                     if (checkIfCorrect(cols, i, min)) {
-                        System.out.println(100 * i);
                         return 100 * i;
                     }
                 }
@@ -58,6 +75,7 @@ public class Day13 {
         }
 
         private boolean checkIfCorrect(ArrayList<String> rowsOrCols, int i, int min) {
+            System.out.println(i + " " + min);
             for (int j = 1; j < rowsOrCols.size(); j++) {
                 if (!isPalindrome(rowsOrCols.get(j).substring(i - min, i + min)))
                     return false;
@@ -108,7 +126,7 @@ public class Day13 {
 
     public static void main(String[] args) {
         ArrayList<Pattern> input = parseInput();
-        System.out.println(input.stream().mapToInt((p) -> p.getLineOfReflection()).sum());
+        System.out.println(input.stream().mapToInt((p) -> p.getLineOfReflectionWithSmudge()).sum());
     }
 
 }
