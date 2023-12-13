@@ -28,54 +28,57 @@ public class Day13bis {
         }
 
         public int getLineOfReflectionWithSmudge() {
+            int oldLoR = getLineOfReflection(rows, cols, -1);
             for (int i = 0; i < rows.size(); i++) {
                 String currentRow = rows.get(i);
-                String currentCol = cols.get(i);
                 for (int j = 0; j < currentRow.length(); j++) {
+                    String currentCol = cols.get(j);
                     ArrayList<String> copyRows = new ArrayList<>(rows);
                     ArrayList<String> copyCols = new ArrayList<>(cols);
-                    //Modifico carattere in righe e colonne
-                    copyRows.set(i, currentRow.substring(0, j) + ((currentRow.charAt(j) == '.') ? '#' : '.') + currentRow.substring(j+1));
-                    copyCols.set(j, currentCol.substring(0, i) + ((currentCol.charAt(i) == '.') ? '#' : '.') + currentCol.substring(i+1));
-                    //Testo la nuova lineOfReflection
-                    System.out.println(copyRows);
-                    System.out.println(copyCols);
-                    return -1;
+                    // Modifico carattere in righe e colonne
+                    copyRows.set(i, currentRow.substring(0, j) + ((currentRow.charAt(j) == '.') ? '#' : '.')
+                            + currentRow.substring(j + 1));
+                    copyCols.set(j, currentCol.substring(0, i) + ((currentCol.charAt(i) == '.') ? '#' : '.')
+                            + currentCol.substring(i + 1));
+                    // Testo la nuova lineOfReflection
+
+                    int newLoR = getLineOfReflection(copyRows, copyCols, oldLoR);
+                    if (newLoR != -1) {
+                        return newLoR;
+                    }
                 }
             }
             return -1;
         }
 
-        public int getLineOfReflection(ArrayList<String> rows, ArrayList<String> cols) {
+        public int getLineOfReflection(ArrayList<String> newRows, ArrayList<String> newCols, int toIgnore) {
             // Provo tra le colonne
-            String firstRow = rows.get(0);
+            String firstRow = newRows.get(0);
             for (int i = 1; i <= firstRow.length() - 1; i++) {
                 String before = firstRow.substring(0, i);
                 String after = firstRow.substring(i);
                 int min = (before.length() < after.length()) ? before.length() : after.length();
                 if (isPalindrome(firstRow.substring(i - min, i + min))) {
-                    if (checkIfCorrect(rows, i, min)) {
+                    if (checkIfCorrect(newRows, i, min) && i != toIgnore) {
                         return i;
                     }
                 }
             }
-            String firstCol = cols.get(0);
+            String firstCol = newCols.get(0);
             for (int i = 1; i <= firstCol.length() - 1; i++) {
                 String before = firstCol.substring(0, i);
                 String after = firstCol.substring(i);
                 int min = (before.length() < after.length()) ? before.length() : after.length();
                 if (isPalindrome(firstCol.substring(i - min, i + min))) {
-                    if (checkIfCorrect(cols, i, min)) {
+                    if (checkIfCorrect(newCols, i, min) && 100 * i != toIgnore) {
                         return 100 * i;
                     }
                 }
             }
-            System.out.println("Abbiamo un problema...");
             return -1;
         }
 
         private boolean checkIfCorrect(ArrayList<String> rowsOrCols, int i, int min) {
-            System.out.println(i + " " + min);
             for (int j = 1; j < rowsOrCols.size(); j++) {
                 if (!isPalindrome(rowsOrCols.get(j).substring(i - min, i + min)))
                     return false;
