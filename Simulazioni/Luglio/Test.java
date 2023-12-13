@@ -3,7 +3,9 @@ import java.util.Scanner;
 
 public class Test {
 
-    public static String getFullName(String[] nomi) {
+    private static String getFullName(String[] nomi){
+        //REQUIRES: nomi not null and nomi.length >= 1
+        //EFFECTS: ritorna nomi concatenati da spazi
         String nome = "";
         for (String string : nomi) {
             nome += string + " ";

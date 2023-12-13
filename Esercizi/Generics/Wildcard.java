@@ -23,7 +23,7 @@ public class Wildcard {
         riempiRandom2(l);
     }
 
-    //@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public static <T extends Number> void riempiRandom(ArrayList<T> list) {
         list.add((T) Double.valueOf(38.5));
     }

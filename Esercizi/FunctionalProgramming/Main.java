@@ -19,7 +19,7 @@ public class Main {
 
     static Function<Double, Integer> doubleListToIntList = (x) -> x.intValue();
 
-    static Function<ArrayList<Integer>, Integer> max = (list) -> list.stream().reduce(list.get(0), (max, el) -> el > max ? el : max);
+    static Function<ArrayList<Integer>, Integer> max = (list) -> list.stream().reduce(list.get(0), (max, el) -> el > max ? el : max); 
 
     public static void main(String[] args) {
 

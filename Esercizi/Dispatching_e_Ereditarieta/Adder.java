@@ -10,7 +10,7 @@ public class Adder {
 
     public void addAll(ArrayList<Integer> l) {
         for (int x : l) {
-            add(x);
+            this.add(x);
         }
     }
 

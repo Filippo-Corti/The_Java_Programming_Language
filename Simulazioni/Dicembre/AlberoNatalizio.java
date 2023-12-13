@@ -142,6 +142,7 @@ public class AlberoNatalizio implements Iterable<Decorazione>{
             }
 
         }; 
+
     }
 
     @Override

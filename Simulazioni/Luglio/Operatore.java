@@ -44,7 +44,7 @@ public class Operatore implements Iterable<Utenza> {
         //  lancia UtenzaNonValidaException u non è in this
         for (Utenza utenza : utenze) {
             if (utenza.getNumero().equals(numero)) 
-                return utenza; //Ci vuole il Clone qua altrimenti sta roba non ha senso
+                return (Utenza)utenza.clone(); //Ci vuole il Clone qua altrimenti sta roba non ha senso
         } 
 
         throw new UtenzaNonValidaException("Utenza non presente");

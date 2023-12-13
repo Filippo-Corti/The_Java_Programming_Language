@@ -11,7 +11,7 @@ public class Main {
         System.out.println(p1.equals(p3)); //true
         System.out.println(p1.equals(p2)); //false
 
-        //Non vale la regola dei metodi!
+        //Non vale la regola dei metodi! (Principio di Liskov)
 
         //Utilizzo allora due equals che controllano tutte le coordinate e utilizzano "instanceof"
 

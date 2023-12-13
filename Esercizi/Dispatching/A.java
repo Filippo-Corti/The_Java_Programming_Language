@@ -5,8 +5,12 @@ public class A extends B {
         return "Ciao dalla classe A";
     }
 
+    public String saluta2() {
+        return "Ciao dalla classe A";
+    }
+
     //@Override
-    public int raddoppia(int n) {
+    public double raddoppia(double n, int x) {
         return n * 3;
     }
 

@@ -14,10 +14,8 @@ public class Triangolo extends PoligonoRegolare {
     public boolean repOk() {
         if (numeroLati != 3)
             return false;
-
-        assert super.repOk();
         
-        return true;
+        return super.repOk();
     }
 
     public static void main(String[] args) {
