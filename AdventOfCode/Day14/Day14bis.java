@@ -163,7 +163,7 @@ public class Day14bis {
     public static void main(String[] args) {
         ArrayList<ArrayList<Character>> input = parseInput();
         HashMap<String, String> cache = new HashMap<>();
-        print(input);
+       // print(input);
         // Ciclo 154 -> ... -> 179 (26 elementi)
         // System.out.println((1E9-154)%26+154); = 168
         for (int i = 1; i <= 1000; i++) {
@@ -171,20 +171,16 @@ public class Day14bis {
             if (!cache.containsKey(stringified)) {
                 spin(input);
                 cache.put(stringified, i + " " + stringPlatform(input));
-                System.out.println("Calcolato" + i);
+               //System.out.println("Calcolato" + i);
             } else {
                 input = unstringPlatform(cache.get(stringified).split(" ")[1]);
                 if (cache.get(stringified).split(" ")[0].equals("168")) {
-                    print(input);
                     System.out.println(countLoad(input));
                     return;
                 }
-                System.out.println("Cachato" + i + "  " + cache.get(stringified).split(" ")[0]);
+                //System.out.println("Cachato" + i + "  " + cache.get(stringified).split(" ")[0]);
             }
         }
-        print(input);
-        System.out.println(countLoad(input));
-
     }
 
 }
