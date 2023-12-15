@@ -14,73 +14,89 @@ public class Day12bis {
         String data;
         ArrayList<Integer> blocks;
 
-        public int calculateArrangements() {
-            HashSet<String> sequences = new HashSet<>();
-            String untilFirstQuestionMark = untilNextQuestionMark(data);
-            sequences.add(untilFirstQuestionMark);
-            for (int i = 0; i < data.length();) {
-                HashSet<String> newSequences = new HashSet<>();
-                for (String sequence : sequences) {
-                    sequence += untilNextQuestionMark(data.substring(sequence.length()));
-                    if (sequence.length() == data.length()) {
-                        if (isValid(sequence)) {
-                          // System.out.println(sequence + " is valid");
-                            newSequences.add(sequence);
-                        } else {
-                           // System.out.println(sequence + " is not valid");
-                        }
-                    } else {
-                        String sequencePoint = sequence + ".";
-                        String sequenceSpring = sequence + "#";
-                        if (isValid(sequencePoint)) {
-                          // System.out.println(sequencePoint + " is valid");
-                            newSequences.add(sequencePoint);
-                        } else {
-                           // System.out.println(sequencePoint + " is not valid");
-                        }
-                        if (isValid(sequenceSpring)) {
-                           // System.out.println(sequenceSpring + " is valid");
-                            newSequences.add(sequenceSpring);
-                        } else {
-                          // System.out.println(sequenceSpring + " is not valid");
-                        }
-                    }
-                    i = sequence.length() + 1;
-                }
-                sequences = newSequences;
-            }
-            return sequences.size();
-        }
-
-        private static String untilNextQuestionMark(String substring) {
-            return (substring.contains("?") ? substring.substring(0, substring.indexOf("?")) : substring);
-        }
-
-        public boolean isValid(String s) {
-            Matcher m = Pattern.compile("[#]+").matcher(s);
-            int i = 0;
-            while (m.find()) {
-                String found = m.group();
-                i++;
-                if (i > blocks.size()) {
-                    break;
-                }
-                if (found.length() != blocks.get(i - 1) && s.length() == data.length()) {
-                    return false;
-                }
-            }
-            if (s.length() == data.length() && i != blocks.size()) {
-               // System.out.println(s + " false " + i);
-                return false;
-            }
-           // System.out.println(s + " true " + i);
-            return true;
+        public ConditionRecord(String data, ArrayList<Integer> blocks) {
+            this.data = data;
+            this.blocks = blocks;
         }
 
         @Override
         public String toString() {
-            return data;
+            return data + " | " + blocks;
         }
+
+    }
+
+    public static int calculateArrangementsPoint(ConditionRecord cr) {
+        ConditionRecord newCr = new ConditionRecord(cr.data.substring(1), cr.blocks);
+        return calculateArrangements(newCr);
+    }
+
+    public static int calculateArrangementsSpring(ConditionRecord cr) {
+        int i;
+        for (i = 0; i < cr.blocks.get(0); i++) {
+            if (cr.data.length() < i+1) {
+                return 0;
+            }
+            if (cr.data.charAt(i) == '.') {
+                return 0; // Can't work
+            }
+        }
+
+        if (cr.blocks.size() != 1) {
+            if (cr.data.length() < cr.blocks.get(0)) {
+                return 0;
+            }
+            if (cr.data.length() >= i) {
+                if(cr.blocks.size() == 1) 
+                    return 1;
+            }
+            if (cr.data.charAt(i) == '#') {
+                return 0; // Can't work
+            }
+        } else {
+            return 1;
+        }
+
+        ConditionRecord newCr = new ConditionRecord(cr.data.substring(i+1),
+                new ArrayList<>(cr.blocks.subList(1, cr.blocks.size())));
+
+        return calculateArrangements(newCr);
+    }
+
+    public static int calculateArrangements(ConditionRecord cr) {
+
+        // Base Case
+        if(cr.data.length() == 0) {
+            if (cr.blocks.size() == 0) 
+                return 1;
+            else
+                return 0;
+        }
+
+        // Recursive Case
+        char currentChar = cr.data.charAt(0);
+
+        if (currentChar == '.') {
+            int x = calculateArrangementsPoint(cr);
+              System.out.println(cr + " ritorna " + x);
+            return x;
+        }
+
+        if (currentChar == '#') {
+            int x = calculateArrangementsSpring(cr);
+            System.out.println(cr + " ritorna " + x);
+            return x;
+        }
+
+        if (currentChar == '?') {
+            int x = calculateArrangementsSpring(cr);
+            System.out.println("#" + cr.toString().substring(1) + " ritorna " + x);
+            int y = calculateArrangementsPoint(cr);
+            System.out.println("." + cr.toString().substring(1) + " ritorna " + y);
+            return x+y;
+        }
+
+        return 0;
 
     }
 
@@ -106,9 +122,35 @@ public class Day12bis {
                 blocks.add(Integer.parseInt(string));
             }
 
-            ConditionRecord cr = new ConditionRecord();
-            cr.data = in[0];
-            cr.blocks = blocks;
+            ConditionRecord cr = new ConditionRecord(in[0], blocks);
+
+            input.add(cr);
+        }
+
+        return input;
+    }
+
+    public static ArrayList<ConditionRecord> p1parseInput() {
+
+        File f = new File("input.txt");
+        Scanner s = null;
+        try {
+            s = new Scanner(f);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        }
+
+        ArrayList<ConditionRecord> input = new ArrayList<>();
+
+        while (s.hasNextLine()) {
+            String[] in = s.nextLine().split(" ");
+            ArrayList<Integer> blocks = new ArrayList<>();
+            String[] inBlocks = in[1].split(",");
+            for (String string : inBlocks) {
+                blocks.add(Integer.parseInt(string));
+            }
+
+            ConditionRecord cr = new ConditionRecord(in[0], blocks);
 
             input.add(cr);
         }
@@ -117,8 +159,12 @@ public class Day12bis {
     }
 
     public static void main(String[] args) {
-        ArrayList<ConditionRecord> input = parseInput();
-        System.out.println(input.stream().mapToInt(ConditionRecord::calculateArrangements).sum());
+        ArrayList<ConditionRecord> input = p1parseInput();
+        //System.out.println(input.stream().mapToInt(cr -> calculateArrangements(cr)).sum());
+        System.out.println(calculateArrangements(input.get(1)));
+        /*for (ConditionRecord conditionRecord : input) {
+            System.out.println(conditionRecord + " " + calculateArrangements(conditionRecord));
+        }*/
     }
 
 }

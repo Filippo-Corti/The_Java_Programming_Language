@@ -6,7 +6,6 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.sound.midi.Patch;
 
 public class Day12 {
 
@@ -77,9 +76,10 @@ public class Day12 {
             return true;
         }
 
+
         @Override
         public String toString() {
-            return data;
+            return data + " | " + blocks;
         }
 
     }
@@ -116,7 +116,11 @@ public class Day12 {
 
     public static void main(String[] args) {
         ArrayList<ConditionRecord> input = parseInput();
-        System.out.println(input.stream().mapToInt(ConditionRecord::calculateArrangements).sum());
+      // System.out.println(input.stream().mapToInt(ConditionRecord::calculateArrangements).sum());
+        
+        for (ConditionRecord conditionRecord : input) {
+            System.out.println(conditionRecord + " " + conditionRecord.calculateArrangements());
+        }
     }
 
 }
