@@ -210,7 +210,7 @@ public class Day16bis {
     public static void main(String[] args) {
         ArrayList<ArrayList<Cell>> grid = parseInput();
         ArrayList<Integer> counts = new ArrayList<>();
-        print(grid);
+        //print(grid);
         for (int i = 1; i < grid.size() - 1; i++) {
             castRay(grid, grid.get(i).get(1), new int[] { 0, 1 });
             counts.add(visitedCells.size());
@@ -233,7 +233,7 @@ public class Day16bis {
             cache.clear();
         }
 
-        System.out.println(counts);
+       // System.out.println(counts);
         System.out.println("Max: " + counts.stream().max((o1, o2) -> o1 - o2).get());
     }
 }
