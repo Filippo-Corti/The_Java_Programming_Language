@@ -7,12 +7,26 @@ import java.util.Scanner;
 
 public class Day18bis {
 
+    static class Point {
+        long x, y;
+
+        public Point(long x, long y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + x + ", " + y + ")";
+        }
+    }
+
     static class Direction {
-        int dx;
-        int dy;
+        long dx;
+        long dy;
         String color;
 
-        public Direction(int dx, int dy, String color) {
+        public Direction(long dx, long dy, String color) {
             this.dx = dx;
             this.dy = dy;
             this.color = color;
@@ -25,7 +39,43 @@ public class Day18bis {
 
     }
 
-    public static ArrayList<Direction> parseInput() {
+    public static ArrayList<Direction> parseInput1() {
+
+        File f = new File("input.txt");
+        Scanner s = null;
+        try {
+            s = new Scanner(f);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        }
+
+        ArrayList<Direction> directions = new ArrayList<>();
+
+        while (s.hasNextLine()) {
+            String[] in = s.nextLine().split(" ");
+            int dValue = Integer.parseInt(in[1]);
+            int dx = 0, dy = 0;
+            switch (in[0]) {
+                case "R":
+                    dx = dValue;
+                    break;
+                case "L":
+                    dx = -dValue;
+                    break;
+                case "U":
+                    dy = -dValue;
+                    break;
+                case "D":
+                    dy = dValue;
+                    break;
+            }
+            directions.add(new Direction(dx, dy, ""));
+        }
+
+        return directions;
+    }
+
+    public static ArrayList<Direction> parseInput2() {
 
         File f = new File("input.txt");
         Scanner s = null;
@@ -38,8 +88,8 @@ public class Day18bis {
 
         while (s.hasNextLine()) {
             String in = s.nextLine().split(" ")[2];
-            int dValue = Integer.parseInt(in.substring(2, 7), 16);
-            int dx = 0, dy = 0;
+            long dValue = Long.parseLong(in.substring(2, 7), 16);
+            long dx = 0, dy = 0;
             switch (in.charAt(7)) {
                 case '0':
                     dx = dValue;
@@ -60,112 +110,51 @@ public class Day18bis {
         return directions;
     }
 
-    public static ArrayList<ArrayList<Character>> drawMatrix(ArrayList<Direction> directions) {
 
-        ArrayList<ArrayList<Character>> matrix = new ArrayList<>();
+    public static void main(String[] args) {
+        ArrayList<Direction> directions = parseInput2();
+        Data data = getVertices(directions);
+        System.out.println("Gauss: " + areaWithGauss(data));
+    }
 
-        // Init Matrix
-        int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = 0, maxY = 0;
-        int currX = 0, currY = 0;
+    public static class Data {
+        ArrayList<Point> vertices;
+        long pointsOnPerimeter;
+    }
+
+    private static Data getVertices(ArrayList<Direction> directions) {
+        ArrayList<Point> vertices = new ArrayList<>();
+        long currX = 0, currY = 0;
+
+        long pointsOnPerimeter = 0;
+
+        vertices.add(new Point(currX, currY));
 
         for (Direction direction : directions) {
             currX += direction.dx;
             currY += direction.dy;
 
-            if (currX > maxX)
-                maxX = currX;
-            if (currX < minX)
-                minX = currX;
-            if (currY > maxY)
-                maxY = currY;
-            if (currY < minY)
-                minY = currY;
-
+            vertices.add(new Point(currX, currY));
+            pointsOnPerimeter += Math.abs(direction.dx) + Math.abs(direction.dy);
         }
 
-        int rows = (maxY - minY + 1);
-        int cols = (maxX - minX + 1);
+        Data data = new Data();
+        data.pointsOnPerimeter = pointsOnPerimeter;
+        data.vertices = vertices;
 
-        for (int i = 0; i < rows; i++) {
-            ArrayList<Character> row = new ArrayList<>();
-            for (int j = 0; j < cols; j++) {
-                row.add('.');
-            }
-            matrix.add(row);
-        }
+       // System.out.println(vertices);
 
-        // Fill Matrix
-        currX = Math.abs(minX);
-        currY = Math.abs(minY);
-
-        for (Direction direction : directions) {
-            if (direction.dx > 0) {
-                for (int i = 0; i < direction.dx; i++) {
-                    currX++;
-                    matrix.get(currY).set(currX, '#');
-                }
-            } else {
-                for (int i = 0; i < -direction.dx; i++) {
-                    currX--;
-                    matrix.get(currY).set(currX, '#');
-                }
-            }
-
-            if (direction.dy > 0) {
-                for (int i = 0; i < direction.dy; i++) {
-                    currY++;
-                    matrix.get(currY).set(currX, '#');
-                }
-            } else {
-                for (int i = 0; i < -direction.dy; i++) {
-                    currY--;
-                    matrix.get(currY).set(currX, '#');
-                }
-            }
-        }
-
-        return matrix;
+        return data;
     }
 
-    public static void floodFill(ArrayList<ArrayList<Character>> matrix, int r, int c) {
-
-        if (r < 0 || r >= matrix.size() || c < 0 || c >= matrix.get(0).size() || matrix.get(r).get(c) == '#')
-            return;
-        
-        matrix.get(r).set(c, '#');
-
-        floodFill(matrix, r+1, c);
-        floodFill(matrix, r-1, c);
-        floodFill(matrix, r, c+1);
-        floodFill(matrix, r, c-1);
-
-    }
-
-    public static int print(ArrayList<ArrayList<Character>> matrix) {
-        int c = 0;
-        for (ArrayList<Character> row : matrix) {
-            for (Character cell : row) {
-                if (cell == '#')
-                    c++;
-               // System.out.print(cell);
-            }
-          //  System.out.println();
+    private static long areaWithGauss(Data data) {
+        long area = 0;
+        for (int i = 1; i < data.vertices.size(); i++) {
+            area += data.vertices.get(i).x * data.vertices.get(i - 1).y
+                    - data.vertices.get(i - 1).x * data.vertices.get(i).y;
         }
-        return c;
-    }
-
-    public static void main(String[] args) throws FileNotFoundException{
-        File file = new File("err.txt");
-		FileOutputStream fos = new FileOutputStream(file);
-		PrintStream ps = new PrintStream(fos);
-		System.setErr(ps);
-
-        ArrayList<Direction> directions = parseInput();
-        ArrayList<ArrayList<Character>> matrix = drawMatrix(directions);
-        System.out.println("Matrix OK");
-        floodFill(matrix, 50, 180);
-        System.out.println("Fill OK");
-       System.out.println("Count: " + print(matrix));
+        long n = data.vertices.size();
+        return Math.abs(area) / 2 + data.pointsOnPerimeter / 2 + 1;
     }
 
 }
