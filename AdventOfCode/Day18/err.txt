@@ -1,0 +1,8 @@
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at java.base/java.util.Arrays.copyOf(Arrays.java:3482)
+	at java.base/java.util.ArrayList.grow(ArrayList.java:237)
+	at java.base/java.util.ArrayList.grow(ArrayList.java:244)
+	at java.base/java.util.ArrayList.add(ArrayList.java:483)
+	at java.base/java.util.ArrayList.add(ArrayList.java:496)
+	at Day18bis.drawMatrix(Day18bis.java:92)
+	at Day18bis.main(Day18bis.java:164)
