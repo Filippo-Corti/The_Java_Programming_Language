@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -9,11 +10,32 @@ import java.util.regex.Pattern;
 
 public class Day19bis {
 
+    static class Interval {
+        int a, b; // [a, b)
+
+        public Interval(int a, int b) {
+            this.a = a;
+            this.b = b;
+        }
+
+        public int size() {
+            return b - a;
+        }
+
+        @Override
+        public String toString() {
+            return "Interval [a=" + a + ", b=" + b + "]";
+        }
+
+    }
+
     static class MachineSystem {
         HashMap<String, Workflow> workflows;
+        ArrayList<ArrayList<Interval>> intervals;
 
-        public MachineSystem(HashMap<String, Workflow> workflows) {
+        public MachineSystem(HashMap<String, Workflow> workflows, ArrayList<ArrayList<Interval>> intervals) {
             this.workflows = workflows;
+            this.intervals = intervals;
         }
 
         public boolean workOn(Piece piece) {
@@ -30,7 +52,7 @@ public class Day19bis {
 
         @Override
         public String toString() {
-            return "MachineSystem [workflows=" + workflows + "]";
+            return "MachineSystem [workflows=" + workflows + ", intervals=" + intervals + "]";
         }
 
     }
@@ -92,6 +114,11 @@ public class Day19bis {
     }
 
     public static MachineSystem parseInput() {
+        ArrayList<ArrayList<Integer>> intervals = new ArrayList<>();
+        intervals.add(new ArrayList<>());
+        intervals.add(new ArrayList<>());
+        intervals.add(new ArrayList<>());
+        intervals.add(new ArrayList<>());
 
         File f = new File("input.txt");
         Scanner s = null;
@@ -118,28 +145,71 @@ public class Day19bis {
 
             for (int i = 0; i < rulesString.length; i++) {
                 String rule = rulesString[i];
-                Function<Piece, String> ruleFunc = createRuleFunction(rule);
+                Function<Piece, String> ruleFunc = createRuleFunction(rule, intervals);
                 rules.add(ruleFunc);
             }
 
             wf.rules = rules;
             workflows.put(label, wf);
         }
-
-        return new MachineSystem(workflows);
+        return new MachineSystem(workflows, convertToIntervals(intervals));
     }
 
-    private static Function<Piece, String> createRuleFunction(String rule) {
+    private static ArrayList<ArrayList<Interval>> convertToIntervals(ArrayList<ArrayList<Integer>> ints) {
+
+        for (ArrayList<Integer> l : ints) {
+            l.sort(null);
+        }
+
+        ArrayList<ArrayList<Interval>> intervalsList = new ArrayList<>();
+
+        int a = 1, b = 0;
+        for (int i = 0; i < ints.size(); i++) {
+            ArrayList<Integer> list = ints.get(i);
+            ArrayList<Interval> intervals = new ArrayList<>();
+            for (int j = 0; j < list.size(); j++) {
+                b = list.get(j);
+                intervals.add(new Interval(a, b));
+                a = b;
+            }
+            a = 1;
+            intervals.add(new Interval(b, 4001));
+            intervalsList.add(intervals);
+        }
+
+        return intervalsList;
+
+    }
+
+    private static Function<Piece, String> createRuleFunction(String rule, ArrayList<ArrayList<Integer>> intervals) {
 
         Matcher m = Pattern.compile("[0-9]+").matcher(rule);
         String nextLabel = (rule.contains(":")) ? rule.substring(rule.indexOf(":") + 1) : rule;
         if (m.find()) {
             int n = Integer.parseInt(m.group());
+            int n2 = n;
+            Function<Piece, String> f = null;
             if (rule.contains("<")) {
-                return (p) -> (p.get(rule.charAt(0)) < n) ? nextLabel : "";
+                f = (p) -> (p.get(rule.charAt(0)) < n) ? nextLabel : "";
             } else {
-                return (p) -> (p.get(rule.charAt(0)) > n) ? nextLabel : "";
+                f = (p) -> (p.get(rule.charAt(0)) > n) ? nextLabel : "";
+                n2++;
             }
+            switch (rule.charAt(0)) {
+                case 'x':
+                    intervals.get(0).add(n2);
+                    break;
+                case 'm':
+                    intervals.get(1).add(n2);
+                    break;
+                case 'a':
+                    intervals.get(2).add(n2);
+                    break;
+                case 's':
+                    intervals.get(3).add(n2);
+                    break;
+            }
+            return f;
         } else {
             return (p) -> nextLabel;
         }
@@ -148,19 +218,22 @@ public class Day19bis {
 
     public static void main(String[] args) {
         MachineSystem input = parseInput();
-        int s = 0;
-        for (int i = 1; i <= 4000; i++) {
-            for (int j = 1; j <= 4000; j++) {
-                for (int k = 1; k <= 4000; k++) {
-                    for (int l = 1; l <= 4000; l++) {
-                        Piece p = new Piece(i, j, k, l);
-                        if (input.workOn(p))
-                            s++;
+        BigInteger s = new BigInteger("0");
+
+        int i = 0;
+        for (Interval xs : input.intervals.get(0)) {
+            for (Interval ms : input.intervals.get(1)) {
+                for (Interval as : input.intervals.get(2)) {
+                    for (Interval ss : input.intervals.get(3)) {
+                        Piece p = new Piece(xs.a, ms.a, as.a, ss.a);
+                        if (input.workOn(p)) {
+                            s = s.add(BigInteger.valueOf(
+                                    (long) xs.size() * (long) ms.size() * (long) as.size() * (long) ss.size()));
+                        }
                     }
                 }
-                System.out.println(j);
             }
-            System.out.println("+1/4000");
+            System.out.println(i++ + " / " + input.intervals.get(0).size());
         }
         System.out.println(s);
     }
