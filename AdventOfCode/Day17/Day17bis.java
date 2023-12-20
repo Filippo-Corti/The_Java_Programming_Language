@@ -2,11 +2,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
-public class Day17 {
+public class Day17bis {
 
     public static class Pos {
         int row, col;
@@ -46,36 +47,20 @@ public class Day17 {
             return "Pos [row=" + row + ", col=" + col + "]";
         }
 
-        
-
     }
 
-    public static class Direction {
-        int deltaRow, deltaCol;
+    public static enum Direction {
+        STILL(0, 0), UP(-1, 0), RIGHT(0, 1), DOWN(1, 0), LEFT(0, -1);
 
-        public Direction(int deltaRow, int deltaCol) {
+        int deltaRow;
+        int deltaCol;
+
+        Direction(int deltaRow, int deltaCol) {
             this.deltaRow = deltaRow;
             this.deltaCol = deltaCol;
         }
 
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + deltaRow;
-            result = prime * result + deltaCol;
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            Direction other = (Direction) obj;
+        public boolean equals(Direction other) {
             if (deltaRow != other.deltaRow)
                 return false;
             if (deltaCol != other.deltaCol)
@@ -84,15 +69,23 @@ public class Day17 {
         }
 
         public Direction invert() {
-            return new Direction(-this.deltaRow, -this.deltaCol);
+            switch (this) {
+                case UP:
+                    return DOWN;
+                case DOWN:
+                    return UP;
+                case LEFT:
+                    return RIGHT;
+                case RIGHT:
+                    return LEFT;
+            }
+            return null;
         }
 
         @Override
         public String toString() {
             return "Direction [deltaRow=" + deltaRow + ", deltaCol=" + deltaCol + "]";
         }
-
-        
 
     }
 
@@ -103,17 +96,20 @@ public class Day17 {
         int straightLineCount;
         long distanceFromSource;
 
-        public Tuple(int row, int col, int directionRow, int directionCol, int straightLineCount,
+        public Tuple(int row, int col, Direction dir, int straightLineCount,
                 long distanceFromSource) {
             this.position = new Pos(row, col);
-            this.direction = new Direction(directionRow, directionCol);
+            this.direction = dir;
             this.straightLineCount = straightLineCount;
             this.distanceFromSource = distanceFromSource;
         }
 
         @Override
         public int compareTo(Tuple o) {
-            return Long.compare(distanceFromSource, o.distanceFromSource);
+            int res = Long.compare(distanceFromSource, o.distanceFromSource);
+            if (res == 0)
+                res = Integer.compare(o.position.row + o.position.col, position.row + position.col);
+            return res;
         }
 
         @Override
@@ -125,30 +121,6 @@ public class Day17 {
         @Override
         public int hashCode() {
             return Objects.hash(position, direction, straightLineCount);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            Tuple other = (Tuple) obj;
-            if (position == null) {
-                if (other.position != null)
-                    return false;
-            } else if (!position.equals(other.position))
-                return false;
-            if (direction == null) {
-                if (other.direction != null)
-                    return false;
-            } else if (!direction.equals(other.direction))
-                return false;
-            if (straightLineCount != other.straightLineCount)
-                return false;
-            return true;
         }
 
     }
@@ -182,33 +154,45 @@ public class Day17 {
 
         ArrayList<ArrayList<Integer>> map = parseInput();
 
-        long res = shortestPathToEnd(map);
+        int[][] m = toArray(map);
+
+        long res = shortestPathToEnd(m);
 
         System.out.println(res);
 
     }
 
-    private static long shortestPathToEnd(ArrayList<ArrayList<Integer>> map) {
+    private static int[][] toArray(ArrayList<ArrayList<Integer>> map) {
+        int[][] m = new int[map.size()][map.get(0).size()];
+        int r = 0;
+        for (ArrayList<Integer> row : map) {
+            int c = 0;
+            for (int i : row) {
+                m[r][c] = i;
+                c++;
+            }
+            r++;
+        }
+        return m;
+    }
 
-        ArrayList<Direction> directions = new ArrayList<>(Arrays.asList(
-                new Direction(0, 0),
-                new Direction(0, 1),
-                new Direction(0, -1),
-                new Direction(1, 0),
-                new Direction(-1, 0)));
+    private static long shortestPathToEnd(int[][] map) {
+
+        Direction directions[] = Direction.values();
 
         PriorityQueue<Tuple> pq = new PriorityQueue<>();
-        ArrayList<String> visited = new ArrayList<>();
+        HashSet<String> visited = new HashSet<>();
 
-        Tuple t = new Tuple(0, 0, 0, 0, 0, 0);
+        Tuple t = new Tuple(0, 0, Direction.STILL, 0, 0);
         pq.add(t);
 
         while (!pq.isEmpty()) {
 
             Tuple curr = pq.remove();
-            System.out.println(curr.distanceFromSource);
+            // System.out.println(curr.distanceFromSource);
+           // System.out.println(pq.size());
 
-            if (curr.position.row == map.size() - 1 && curr.position.col == map.get(0).size() - 1)
+            if ((curr.position.row == map.length - 1 && curr.position.col == map[0].length - 1) && curr.straightLineCount >= 4)
                 return curr.distanceFromSource;
 
             if (visited.contains(curr.toString()))
@@ -217,25 +201,27 @@ public class Day17 {
             visited.add(curr.toString());
 
             // Try same direction (if you can)
-            if (curr.straightLineCount < 3 && !curr.direction.equals(directions.get(0))) {
+            if (curr.straightLineCount < 10 && curr.direction != directions[0]) {
                 int newRow = curr.position.row + curr.direction.deltaRow;
                 int newCol = curr.position.col + curr.direction.deltaCol;
-                if (newRow >= 0 && newRow < map.size() && newCol >= 0 && newCol < map.get(0).size()) {
-                    pq.add(new Tuple(newRow, newCol, curr.direction.deltaRow,
-                            curr.direction.deltaCol, curr.straightLineCount + 1,
-                            curr.distanceFromSource + map.get(newRow).get(newCol)));
+                if (newRow >= 0 && newRow < map.length && newCol >= 0 && newCol < map[0].length) {
+                    pq.add(new Tuple(newRow, newCol, curr.direction, curr.straightLineCount + 1,
+                            curr.distanceFromSource + map[newRow][newCol]));
                 }
             }
 
-            // Try all other direction
-            for (int i = 1; i < directions.size(); i++) {
-                Direction d = directions.get(i);
-                if (!curr.direction.equals(d) && !curr.direction.equals(d.invert())) {
-                    int newRow = curr.position.row + d.deltaRow;
-                    int newCol = curr.position.col + d.deltaCol;
-                    if (newRow >= 0 && newRow < map.size() && newCol >= 0 && newCol < map.get(0).size()) {
-                        pq.add(new Tuple(newRow, newCol, d.deltaRow, d.deltaCol, 1,
-                                curr.distanceFromSource + map.get(newRow).get(newCol)));
+            // Try all other direction (if you can)
+            if (curr.straightLineCount >= 4 || curr.direction == directions[0]) {
+                for (int i = 1; i < directions.length; i++) {
+                    Direction d = directions[i];
+                    if (curr.direction != d && curr.direction != d.invert()) {
+                        // System.out.println(curr.direction + " - " + d);
+                        int newRow = curr.position.row + d.deltaRow;
+                        int newCol = curr.position.col + d.deltaCol;
+                        if (newRow >= 0 && newRow < map.length && newCol >= 0 && newCol < map[0].length) {
+                            pq.add(new Tuple(newRow, newCol, d, 1,
+                                    curr.distanceFromSource + map[newRow][newCol]));
+                        }
                     }
                 }
             }
