@@ -90,7 +90,7 @@ public class Day21 {
 
     public static void main(String[] args) {
         Pos[][] map = parseInput();
-        HashSet<Pos> reached = takeSteps(map, 64);
+        HashSet<Pos> reached = takeSteps(map, 65);
         System.out.println(printAndCount(map, reached));
     }
 
@@ -136,7 +136,6 @@ public class Day21 {
                 }
             }
             reached = new HashSet<>(newReached);
-            System.out.println(i);
         }
 
         return reached;
