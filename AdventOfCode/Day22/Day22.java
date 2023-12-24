@@ -55,9 +55,7 @@ public class Day22 {
         }
 
         ArrayList<Brick> bricks = new ArrayList<>();
-        int maxX = 0;
-        int maxY = 0;
-        int maxZ = 0;
+        int maxX = 0, maxY = 0, maxZ = 0;
 
         while (s.hasNextLine()) {
             String[] in = s.nextLine().split("~");
@@ -96,6 +94,25 @@ public class Day22 {
         print3DMap(map);
         System.out.println(countDisintegrables(map, data.bricks));
         System.out.println(data.bricks.get(2).getOccupiedSpace());
+        System.out.println(contaPezzi(map));
+        System.out.println(contaDimensioni(data.bricks));
+    }
+
+    private static int contaDimensioni(ArrayList<Brick> bricks) {
+        return bricks.stream().mapToInt((b) -> b.getOccupiedSpace().size()).sum();
+    }
+
+    private static int contaPezzi(int[][][] map) {
+        int c = 0;
+        for (int x = 0; x < map.length; x++) {
+            for (int y = 0; y < map[0].length; y++) {
+                for (int z = 0; z < map[0][0].length; z++) {
+                    if (map[x][y][z] != 0)
+                        c++;
+                }
+            }
+        }
+        return c;
     }
 
     record BrickLinks(HashSet<Integer> isSupportedBy, HashSet<Integer> supports) {
@@ -109,17 +126,16 @@ public class Day22 {
             HashSet<Integer> above = new HashSet<>();
             ArrayList<Pos> brickSpace = brick.getOccupiedSpace();
             for (Pos pos : brickSpace) {
-                if (pos.z == brickSpace.get(0).z) {
-                    if (map[pos.x][pos.y][pos.z - 1] != 0) {
-                        below.add(map[pos.x][pos.y][pos.z - 1]);
-                    }
+                if (map[pos.x][pos.y][pos.z - 1] != 0) {
+                    below.add(map[pos.x][pos.y][pos.z - 1]);
                 }
-                if (pos.z == brickSpace.get(brickSpace.size() - 1).z) {
-                    if (map[pos.x][pos.y][pos.z + 1] != 0) {
-                        above.add(map[pos.x][pos.y][pos.z + 1]);
-                    }
+                if (map[pos.x][pos.y][pos.z + 1] != 0) {
+                    above.add(map[pos.x][pos.y][pos.z + 1]);
                 }
             }
+            Pos in = brickSpace.get(0);
+            below.remove(map[in.x][in.y][in.z]);
+            above.remove(map[in.x][in.y][in.z]);
             links.put(c, new BrickLinks(below, above));
             c++;
         }
@@ -132,18 +148,42 @@ public class Day22 {
                 System.out.println(i + " is removable");
                 continue;
             }
+            boolean removable = true;
             for (int brickAbove : bl.supports) {
-                if (links.get(brickAbove).isSupportedBy.size() > 1) {
-                    c++;
-                    System.out.println(i + " is removable");
-                    break;
+                if (links.get(brickAbove).isSupportedBy.size() <= 1) {
+                    removable = false;
                 }
             }
+            if (removable) {
+                c++;
+                System.out.println(i + " is removable");
+            }
+
         }
         return c;
     }
 
     private static void print3DMap(int[][][] map) {
+        // Print X and Z Axis
+        System.out.println("--------- X and Y Axis ---------");
+        for (int y = 0; y < map[0].length; y++) {
+            for (int x = 0; x < map.length; x++) {
+                int z;
+                for (z = map[0][0].length - 1; z >= 0; z--) {
+                    if (map[x][y][z] != 0) {
+                        System.out.print(String.format("%04d ", map[x][y][z]));
+                        break;
+                    }
+                }
+                if (z == -1) {
+                    System.out.print(String.format("%04d ", map[x][y][map[0][0].length - 1]));
+                }
+            }
+            System.out.print("|" + (y));
+            System.out.println();
+        }
+        System.out.println("-".repeat(map.length));
+
         // Print X and Z Axis
         System.out.println("--------- X and Z Axis ---------");
         for (int z = map[0][0].length - 1; z >= 0; z--) {
